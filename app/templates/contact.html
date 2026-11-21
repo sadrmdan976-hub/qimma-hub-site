@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+
+{% block title %}تواصل معنا — {{ s.site_name }}{% endblock %}
+{% block description %}تواصل مع مركز القمة للخدمات الجامعية عبر واتساب أو الهاتف أو البريد الإلكتروني.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>تواصل معنا</span></div>
+    <h1>تواصل معنا</h1>
+    <p>نحن قريبون منك داخل الجامعة، وعلى واتساب على مدار ساعات العمل. اختر الوسيلة الأنسب لك.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <span class="icon-tile" style="background:#E7F9EF;border-color:#BFE8D0;color:#1C8C50">{{ brand('whatsapp') }}</span>
+        <h3>واتساب</h3>
+        <p>أسرع وسيلة للاستفسار وإرسال طلبك، مع إمكانية إرسال الملفات مباشرة.</p>
+        <a class="val" href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" dir="ltr">{{ s.phone }}</a>
+        <a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" class="btn btn-green btn-sm">{{ brand('whatsapp') }} راسلنا الآن</a>
+      </div>
+      <div class="contact-card reveal">
+        <span class="icon-tile">{{ icon('phone') }}</span>
+        <h3>الهاتف</h3>
+        <p>للاستفسارات المباشرة خلال ساعات العمل الرسمية.</p>
+        <a class="val" href="tel:{{ s.phone|wa }}" dir="ltr">{{ s.phone }}</a>
+        <span class="muted" style="font-size:12.5px">{{ s.hours }}</span>
+      </div>
+      <div class="contact-card reveal">
+        <span class="icon-tile">{{ icon('mail') }}</span>
+        <h3>البريد الإلكتروني</h3>
+        <p>مناسب للمؤسسات وأعضاء هيئة التدريس وإرسال الملفات الكبيرة.</p>
+        <a class="val" href="mailto:{{ s.email }}">{{ s.email }}</a>
+        <a href="mailto:{{ s.email }}" class="btn btn-light btn-sm">{{ icon('mail') }} أرسل بريداً</a>
+      </div>
+      <div class="contact-card reveal">
+        <span class="icon-tile">{{ icon('pin') }}</span>
+        <h3>زورونا في المركز</h3>
+        <p>{{ s.address }}</p>
+        <span class="muted" style="font-size:12.5px">{{ s.hours }}</span>
+      </div>
+      <div class="contact-card reveal">
+        <span class="icon-tile">{{ icon('users') }}</span>
+        <h3>حساباتنا</h3>
+        <p>تابع جديد التصاميم والعروض عبر حسابات المركز.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="chip" href="{{ s.instagram }}" target="_blank" rel="noopener">{{ brand('instagram') }} إنستغرام</a>
+          <a class="chip" href="{{ s.facebook }}" target="_blank" rel="noopener">{{ brand('facebook') }} فيسبوك</a>
+        </div>
+      </div>
+      <div class="contact-card reveal">
+        <span class="icon-tile">{{ icon('sparkle') }}</span>
+        <h3>اطلب تصميمك</h3>
+        <p>أرسل تفاصيل طلبك من الموقع مباشرة، وسيصلنا مع كل المرفقات.</p>
+        <a href="/order" class="btn btn-gold btn-sm">نموذج الطلب {{ icon('chevron-left') }}</a>
+      </div>
+    </div>
+
+    <div class="qr-card mt-5">
+      <img src="/qr.png" alt="رمز QR لموقع QIMMA HUB" loading="lazy">
+      <div>
+        <h3>{{ s.site_name }} — {{ s.site_name_ar }}</h3>
+        <p>امسح الرمز بكاميرا هاتفك للوصول إلى الموقع، أو شارك الرابط مع أصدقائك وزملائك. جميع الخدمات والأسعار ونموذج الطلب متاحة إلكترونياً.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <a href="/services" class="btn btn-outline btn-sm">تصفح الخدمات</a>
+          <a href="/track" class="btn btn-outline btn-sm">تتبع طلبك</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import status_badge %}
+
+{% block title %}الطلبات — {{ s.site_name }}{% endblock %}
+{% block page_title %}الطلبات{% endblock %}
+{% block page_sub %}تابع طلبات العملاء وحدّث حالتها وأسعارها{% endblock %}
+{% block page_actions %}
+<a href="/admin/orders.csv" class="btn btn-light">{{ icon('download') }} تصدير CSV</a>
+{% endblock %}
+
+{% block content %}
+<div class="tabs">
+  <a class="tab {{ 'is-active' if not f_status }}" href="/admin/orders">الكل <small>{{ total_all }}</small></a>
+  {% for key, label in STATUSES.items() %}
+  <a class="tab {{ 'is-active' if f_status == key }}" href="/admin/orders?status={{ key }}">{{ label }} <small>{{ counts.get(key, 0) }}</small></a>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div class="toolbar">
+    <form method="get" action="/admin/orders">
+      {% if f_status %}<input type="hidden" name="status" value="{{ f_status }}">{% endif %}
+      <input class="input" name="q" value="{{ q }}" placeholder="بحث برقم الطلب أو الاسم أو الهاتف...">
+      <button class="btn btn-light" type="submit">{{ icon('search') }} بحث</button>
+      {% if q %}<a class="btn btn-light" href="/admin/orders{{ ('?status=' ~ f_status) if f_status }}">مسح</a>{% endif %}
+    </form>
+  </div>
+
+  {% if orders %}
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr><th>الرقم</th><th>العميل</th><th>الخدمة</th><th>الكمية</th><th>الموعد</th><th>الحالة</th><th>السعر</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td><span class="ref">{{ o.ref }}</span><span class="sub">{{ o.created_at[:16]|replace('T', ' · ') }}</span></td>
+          <td>{{ o.customer_name }}<span class="sub" dir="ltr">{{ o.phone }}</span></td>
+          <td>{{ o.service_name or '—' }}{% if o.template_name %}<span class="sub">{{ o.template_name }}</span>{% endif %}</td>
+          <td>{{ o.quantity }}</td>
+          <td>{{ o.deadline or '—' }}</td>
+          <td>{{ status_badge(o.status) }}</td>
+          <td>{% if o.quote %}{{ o.quote|money }} {{ currency }}{% else %}<span class="muted">—</span>{% endif %}</td>
+          <td class="actions"><a class="btn btn-light btn-sm" href="/admin/orders/{{ o.id }}">فتح</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted" style="padding:30px 0;text-align:center">لا توجد طلبات مطابقة. جرّب تغيير الفلتر أو البحث.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import status_badge %}
+
+{% block title %}الطلب {{ order.ref }} — {{ s.site_name }}{% endblock %}
+{% block page_title %}الطلب {{ order.ref }}{% endblock %}
+{% block page_sub %}أُرسل في {{ order.created_at[:16]|replace('T', ' — ') }}{% endblock %}
+{% block page_actions %}
+<a href="/admin/orders" class="btn btn-light">{{ icon('chevron-left') }} كل الطلبات</a>
+{% endblock %}
+
+{% block content %}
+<div class="order-detail-grid">
+  <div>
+    <div class="card">
+      <div class="card-head">
+        <div><h2>بيانات العميل</h2><p>{{ order.customer_name }}</p></div>
+        {{ status_badge(order.status) }}
+      </div>
+      <div class="kv">
+        <div><span class="k">الاسم</span><span class="v">{{ order.customer_name }}</span></div>
+        <div><span class="k">الهاتف</span><span class="v" dir="ltr">{{ order.phone }}</span></div>
+        <div><span class="k">البريد الإلكتروني</span><span class="v">{{ order.email or '—' }}</span></div>
+        <div><span class="k">الخدمة</span><span class="v">{{ order.service_name or '—' }}</span></div>
+        <div><span class="k">القالب</span><span class="v">{{ order.template_name or 'بدون قالب محدد' }}</span></div>
+        <div><span class="k">الكمية</span><span class="v">{{ order.quantity }}</span></div>
+        <div><span class="k">الموعد المطلوب</span><span class="v">{{ order.deadline or 'غير محدد' }}</span></div>
+        <div><span class="k">آخر تحديث</span><span class="v">{{ order.updated_at[:16]|replace('T', ' — ') }}</span></div>
+      </div>
+      {% if order.notes %}
+      <h3 style="font-size:14px;margin:18px 0 8px">تفاصيل الطلب</h3>
+      <div class="note-pre">{{ order.notes }}</div>
+      {% endif %}
+      {% if order.attachment %}
+      <div class="mt-3">
+        {% if attachment_url %}
+        <a class="btn btn-light btn-sm" href="{{ attachment_url }}" target="_blank" rel="noopener">{{ icon('file') }} فتح الملف المرفق</a>
+        {% else %}
+        <span class="hint">{{ icon('alert') }} تعذّر إنشاء رابط مؤقت للملف — أعد تحديث الصفحة.</span>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div><h2>إدارة الطلب</h2><p>حدّث الحالة والسعر والملاحظات المرسلة للعميل</p></div></div>
+      <form class="admin-form" method="post" action="/admin/orders/{{ order.id }}">
+        <div class="form-grid">
+          <div class="field">
+            <label for="status">حالة الطلب</label>
+            <select class="select" id="status" name="status">
+              {% for key, label in STATUSES.items() %}
+              <option value="{{ key }}" {{ 'selected' if order.status == key }}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="quote">السعر المعتمد ({{ currency }})</label>
+            <input class="input" id="quote" name="quote" inputmode="decimal" value="{{ order.quote if order.quote is not none else '' }}" placeholder="مثال: 35">
+            <small class="hint">يظهر للعميل في صفحة تتبع الطلب.</small>
+          </div>
+          <div class="field full">
+            <label for="admin_note">ملاحظات للعميل</label>
+            <textarea class="textarea" id="admin_note" name="admin_note" placeholder="مثال: تم تجهيز الملف، وسيتم الإرسال غداً صباحاً.">{{ order.admin_note }}</textarea>
+          </div>
+        </div>
+        <button class="btn btn-gold" type="submit">{{ icon('check') }} حفظ التغييرات</button>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <div class="card-head"><h2>التواصل</h2></div>
+      <p class="muted" style="font-size:13px;margin-bottom:14px">تواصل مع العميل لتأكيد التفاصيل والسعر ثم حدّث الحالة.</p>
+      <div style="display:grid;gap:9px">
+        {% if wa %}<a class="btn btn-green btn-block" href="{{ wa }}" target="_blank">{{ brand('whatsapp') }} واتساب العميل</a>{% endif %}
+        <a class="btn btn-light btn-block" href="tel:{{ order.phone|wa }}">{{ icon('phone') }} اتصال</a>
+        {% if order.email %}<a class="btn btn-light btn-block" href="mailto:{{ order.email }}">{{ icon('mail') }} بريد إلكتروني</a>{% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>الملخص</h2></div>
+      <div class="kv">
+        <div><span class="k">حالة الدفع</span><span class="v">{% if order.quote %}مؤكد السعر{% else %}بانتظار التسعير{% endif %}</span></div>
+        <div><span class="k">السعر</span><span class="v">{% if order.quote %}{{ order.quote|money }} {{ currency }}{% else %}—{% endif %}</span></div>
+        <div><span class="k">رقم الطلب</span><span class="v" dir="ltr">{{ order.ref }}</span></div>
+      </div>
+      <div class="note-pre" style="margin-top:14px">يمكن للعميل متابعة حالته عبر صفحة «تتبع الطلب» على الموقع بإدخال الرقم <b dir="ltr">{{ order.ref }}</b>.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

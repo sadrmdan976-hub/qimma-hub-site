@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import service_card, cat_icon %}
+
+{% block title %}{{ sv.name }} — {{ s.site_name }}{% endblock %}
+{% block description %}{{ sv.summary }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs">
+      <a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span>
+      <a href="/services">خدماتنا</a><span class="sep">{{ icon('chevron-left') }}</span>
+      <a href="/services#{{ sv.category_slug }}">{{ sv.category_name }}</a><span class="sep">{{ icon('chevron-left') }}</span>
+      <span>{{ sv.name }}</span>
+    </div>
+    <h1>{{ sv.name }}</h1>
+    <p>{{ sv.summary }}</p>
+    <div class="hero-chips" style="margin-top:22px">
+      <span class="hero-chip">{{ icon('tag') }} {{ sv.price_note }} {{ sv.price|money }} {{ currency }}{% if sv.unit %} {{ sv.unit }}{% endif %}</span>
+      <span class="hero-chip">{{ icon('clock') }} التنفيذ خلال {{ sv.delivery_days }} {% if sv.delivery_days == 1 %}يوم{% elif sv.delivery_days == 2 %}يومين{% else %}أيام{% endif %}</span>
+      <span class="hero-chip">{{ icon('layers') }} {{ tpls|length }} قوالب متاحة</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split-2">
+    <div>
+      <div class="form-card">
+        <h2 style="font-size:22px;margin-bottom:12px">عن الخدمة</h2>
+        <p class="muted" style="font-size:15px">{{ sv.description or sv.summary }}</p>
+        <ul class="list-check mt-3">
+          <li>{{ icon('check-circle') }}<span>تصميم احترافي متوافق مع متطلبات الجامعة والجهة.</span></li>
+          <li>{{ icon('check-circle') }}<span>جولتا تعديل مجانيتان بعد أول تسليم.</span></li>
+          <li>{{ icon('check-circle') }}<span>تسليم بصيغ عالية الجودة (PDF / PNG / JPG) وملفات المصدر عند الحاجة.</span></li>
+          <li>{{ icon('check-circle') }}<span>إمكانية الطباعة والتجهيز داخل المركز عند الحاجة.</span></li>
+        </ul>
+      </div>
+
+      <div class="form-card mt-4">
+        <div class="section-head" style="margin-bottom:22px">
+          <div>
+            <span class="eyebrow">القوالب</span>
+            <h2 style="font-size:22px">اختر القالب المناسب لك</h2>
+            <p>اضغط على القالب ليُضاف تلقائياً إلى نموذج الطلب.</p>
+          </div>
+        </div>
+        <div class="tpl-picker">
+          {% for t in tpls %}
+          <a class="tpl-option" href="/order?service={{ sv.slug }}&template={{ t.id }}">
+            <span class="tpl-card">
+              <img src="{{ media(t.image) if t.image else ('/preview/t/' ~ t.id ~ '.svg') }}" alt="قالب {{ t.title }}" loading="lazy">
+              <span>{{ t.title }} — اختر</span>
+            </span>
+          </a>
+          {% endfor %}
+        </div>
+        {% if not tpls %}
+        <p class="muted">لا توجد قوالب منشورة لهذه الخدمة بعد، أرسل طلبك وسنقترح عليك تصاميم مناسبة.</p>
+        {% endif %}
+      </div>
+
+      {% if related %}
+      <div class="mt-5">
+        <h2 style="font-size:22px;margin-bottom:20px">خدمات ذات صلة</h2>
+        <div class="service-grid" style="grid-template-columns:repeat(3,1fr)">
+          {% for r in related %}
+          {{ service_card(r, currency) }}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="sticky-card">
+      <div class="form-card" style="border-color:rgba(201,155,78,.45)">
+        <span class="eyebrow">السعر</span>
+        <div class="price" style="margin-top:8px">
+          <small>{{ sv.price_note }}</small>
+          <b style="font-size:38px">{{ sv.price|money }}</b>
+          <span class="unit">{{ currency }}{% if sv.unit %} {{ sv.unit }}{% endif %}</span>
+        </div>
+        <p class="muted" style="font-size:13px;margin-top:6px">السعر النهائي يُؤكد بعد مراجعة تفاصيل الطلب والكمية.</p>
+        <a href="/order?service={{ sv.slug }}" class="btn btn-gold btn-block btn-lg mt-3">{{ icon('sparkle') }} اطلب هذه الخدمة</a>
+        <a href="https://wa.me/{{ s.whatsapp|wa }}?text={{ ('استفسار عن خدمة: ' ~ sv.name)|urlencode }}" target="_blank" rel="noopener" class="btn btn-light btn-block mt-3">{{ brand('whatsapp') }} استفسر عبر واتساب</a>
+        <div class="note-box mt-3">{{ icon('info') }}<span>مدة التنفيذ المتوقعة: {{ sv.delivery_days }} {% if sv.delivery_days == 1 %}يوم{% elif sv.delivery_days == 2 %}يومين{% else %}أيام{% endif %} من تأكيد الطلب. الأعمال المستعجلة تُنجز خلال 24 ساعة بترتيب مسبق.</span></div>
+        <div class="note-box mt-3" style="background:#EEF5FB;border-color:#CFE1F2;color:#20527D">{{ icon('calendar') }}<span>{{ s.hours }}</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

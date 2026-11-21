@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import service_card, cat_icon %}
+
+{% block title %}خدماتنا — {{ s.site_name }}{% endblock %}
+{% block description %}جميع الخدمات الجامعية: تصميم عروض، أغلفة، تنسيق بحوث، شهادات، دعوات، هويات بصرية، طباعة وتجهيز — مع قوالب متعددة لكل خدمة.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>خدماتنا</span></div>
+    <h1>خدماتنا</h1>
+    <p>36 خدمة موزعة على خمسة أقسام، كل خدمة بسعر واضح ومدة تنفيذ وقوالب متعددة تختار منها ما يناسب احتياجك.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-bar">
+      {% for g in groups %}
+      <a class="filter-btn" href="#{{ g.cat.slug }}">{{ g.cat.name }}</a>
+      {% endfor %}
+      <a class="filter-btn" href="/pricing">الأسعار</a>
+    </div>
+
+    {% for g in groups %}
+    <div id="{{ g.cat.slug }}" class="cat-section">
+      {% set total = g.services|length %}
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">{{ '%02d'|format(loop.index) }} — {{ total }} خدمة</span>
+          <h2>{{ g.cat.name }}</h2>
+          <p>{{ g.cat.description }}</p>
+        </div>
+        <span class="icon-tile" style="width:64px;height:64px;border-radius:18px">{{ cat_icon(g.cat.slug) }}</span>
+      </div>
+      <div class="service-grid">
+        {% for sv in g.services %}
+        {{ service_card(sv, currency, loop.index0 * 40) }}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>لم تجد الخدمة التي تبحث عنها؟</h2>
+        <p>راسلنا على واتساب وصف احتياجك، وسنرشدك للخدمة أو الحل المناسب.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} اطلب تصميمك</a>
+        <a href="/contact" class="btn btn-outline btn-lg">تواصل معنا</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

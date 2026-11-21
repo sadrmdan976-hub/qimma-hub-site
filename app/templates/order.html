@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+
+{% block title %}طلب تصميم — {{ s.site_name }}{% endblock %}
+{% block description %}أرسل طلبك الآن: اختر الخدمة والقالب، أضف تفاصيلك وارفع ملفاتك، وسيصلنا طلبك مباشرة.{% endblock %}
+
+{% block content %}
+{% set sel_id = form.get('service_id') or (selected_service.id if selected_service else '') %}
+{% set sel_tpl = form.get('template_id') or selected_template or 0 %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>طلب تصميم</span></div>
+    <h1>اطلب تصميمك</h1>
+    <p>اختر الخدمة والقالب، واملأ بياناتك، وأرفق ملفاتك إن وجدت. سيصل طلبك إلى فريق المركز فوراً ويصلك تأكيد السعر عبر واتساب.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split-2">
+    <div>
+      {% if errors %}
+      <div class="alert alert--err">
+        {{ icon('alert') }}
+        <div>
+          <b>تعذّر إرسال الطلب، يرجى تصحيح ما يلي:</b>
+          <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <form class="form-card" method="post" action="/order" enctype="multipart/form-data" data-order-form>
+        <div class="form-grid">
+          <div class="field">
+            <label for="customer_name">الاسم الكامل <span class="req">*</span></label>
+            <input class="input" id="customer_name" name="customer_name" required minlength="2" value="{{ form.get('customer_name','') }}" placeholder="مثال: محمد أحمد">
+          </div>
+          <div class="field">
+            <label for="phone">رقم الهاتف / واتساب <span class="req">*</span></label>
+            <input class="input" id="phone" name="phone" required inputmode="tel" dir="ltr" value="{{ form.get('phone','') }}" placeholder="09X XXXXXXX">
+            <small class="hint">سنستخدم الرقم للتواصل وتأكيد الطلب.</small>
+          </div>
+          <div class="field full">
+            <label for="email">البريد الإلكتروني <small class="hint">(اختياري)</small></label>
+            <input class="input" id="email" name="email" type="email" dir="ltr" value="{{ form.get('email','') }}" placeholder="name@example.com">
+          </div>
+
+          <div class="field full">
+            <label for="service_id">الخدمة المطلوبة <span class="req">*</span></label>
+            <select class="select" id="service_id" name="service_id" required data-service-select>
+              <option value="">— اختر الخدمة —</option>
+              {% for g in groups %}
+              <optgroup label="{{ g.cat.name }}">
+                {% for sv in g.services %}
+                <option value="{{ sv.id }}" data-slug="{{ sv.slug }}" data-price="{{ sv.price|money }}" data-note="{{ sv.price_note }}" data-unit="{{ sv.unit }}" data-days="{{ sv.delivery_days }}" {{ 'selected' if sel_id|string == sv.id|string }}>
+                  {{ sv.name }} — {{ sv.price|money }} {{ currency }}{% if sv.unit %} {{ sv.unit }}{% endif %}
+                </option>
+                {% endfor %}
+              </optgroup>
+              {% endfor %}
+            </select>
+            <div class="chip mt-3" data-price-hint style="display:none"></div>
+            <small class="hint">عند اختيار الخدمة ستظهر القوالب المتاحة أسفلها.</small>
+          </div>
+
+          <div class="field full">
+            <label>اختر القالب <small class="hint">(اختياري — يمكننا اقتراح تصميم مناسب)</small></label>
+            <div class="tpl-picker" data-tpl-picker>
+              <div class="center muted" style="grid-column:1/-1;padding:18px 0;font-size:13.5px">اختر الخدمة أولاً لعرض القوالب المتاحة.</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="quantity">الكمية المطلوبة</label>
+            <input class="input" id="quantity" name="quantity" type="number" min="1" max="500" value="{{ form.get('quantity', 1) }}">
+            <small class="hint">مثال: عدد الشرائح، الصفحات أو الشهادات.</small>
+          </div>
+          <div class="field">
+            <label for="deadline">الموعد المطلوب</label>
+            <input class="input" id="deadline" name="deadline" type="date" value="{{ form.get('deadline','') }}">
+            <small class="hint">اتركه فارغاً لتنفيذ الطلب بأسرع وقت.</small>
+          </div>
+
+          <div class="field full">
+            <label for="notes">تفاصيل الطلب</label>
+            <textarea class="textarea" id="notes" name="notes" placeholder="اشرح لنا ما تحتاجه: اسم الجهة أو النشاط، المقاس، النصوص، الألوان المفضلة، وأي تفاصيل مهمة.">{{ form.get('notes','') }}</textarea>
+          </div>
+
+          <div class="field full">
+            <label>ملف مرفق <small class="hint">(اختياري — PDF، Word، صور، مضغوط حتى 15 ميجابايت)</small></label>
+            <label class="file-drop" data-file-drop>
+              {{ icon('upload') }}
+              <span><b>اسحب الملف هنا</b> أو اضغط للاختيار</span>
+              <input type="file" name="attachment" data-file-input accept=".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.ppt,.pptx,.zip,.rar">
+              <div class="file-name" data-file-name></div>
+            </label>
+          </div>
+
+          <input type="text" name="website" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-gold btn-lg">{{ icon('sparkle') }} إرسال الطلب</button>
+            <span class="muted" style="font-size:12.5px">بالإرسال أنت توافق على أن يتم التواصل معك لتأكيد التفاصيل والسعر.</span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <aside class="sticky-card">
+      <div class="form-card">
+        <h3 style="font-size:18px;margin-bottom:16px">ماذا يحدث بعد الإرسال؟</h3>
+        <ol class="list-check" style="list-style:none;padding:0">
+          <li>{{ icon('check-circle') }}<span>يصلك رقم طلب مرجعي فور الإرسال لحفظه ومتابعته.</span></li>
+          <li>{{ icon('check-circle') }}<span>نراجع الطلب ونتواصل معك عبر واتساب لتأكيد السعر والموعد.</span></li>
+          <li>{{ icon('check-circle') }}<span>يبدأ التنفيذ بعد التأكيد، وتُنجز التعديلات ضمن المتفق عليه.</span></li>
+          <li>{{ icon('check-circle') }}<span>تستلم الملفات النهائية إلكترونياً أو مطبوعة من المركز.</span></li>
+        </ol>
+        <a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" class="btn btn-green btn-block mt-3">{{ brand('whatsapp') }} تحتاج مساعدة؟ راسلنا</a>
+        <div class="note-box mt-3">{{ icon('info') }}<span>السعر المعروض «يبدأ من» وقد يتغير حسب الحجم والتفاصيل. لا يتم خصم أي مبلغ قبل تأكيدك.</span></div>
+        <div class="note-box mt-3" style="background:#EEF5FB;border-color:#CFE1F2;color:#20527D">{{ icon('clock') }}<span>{{ s.hours }}</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<script>
+window.QH_TEMPLATES = {{ all_templates|tojson }};
+window.QH_SELECTED_TEMPLATE = {{ sel_tpl|int }};
+window.QH_CURRENCY = {{ currency|tojson }};
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/order.js" defer></script>
+{% endblock %}

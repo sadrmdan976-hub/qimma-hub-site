@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}معرض الأعمال — {{ s.site_name }}{% endblock %}
+{% block page_title %}معرض الأعمال{% endblock %}
+{% block page_sub %}أضف نماذج من أعمالك لعرضها في صفحة المعرض{% endblock %}
+{% block page_actions %}
+<a href="/admin/gallery/new" class="btn btn-gold">{{ icon('plus') }} عمل جديد</a>
+{% endblock %}
+
+{% block content %}
+{% if items %}
+<div class="tpl-admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
+  {% for g in items %}
+  <div class="tpl-admin">
+    <a href="{{ media(g.image) if g.image else ('/preview/g/' ~ g.id ~ '.svg') }}" target="_blank" style="display:block;background:#0A1D35">
+      <img src="{{ media(g.image) if g.image else ('/preview/g/' ~ g.id ~ '.svg') }}" alt="{{ g.title }}" style="height:190px" loading="lazy">
+    </a>
+    <div class="body" style="align-items:flex-start">
+      <div>
+        <b>{{ g.title }}</b>
+        <span>{{ g.category or 'بدون تصنيف' }} · {{ KIND_LABELS.get(g.kind, g.kind) }}</span>
+        <span style="margin-top:4px">{{ 'منشور' if g.is_active else 'مخفي' }} · ترتيب {{ g.sort }}</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <a class="icon-btn" href="/admin/gallery/{{ g.id }}" title="تعديل">{{ icon('edit') }}</a>
+        <form class="inline-form" method="post" action="/admin/gallery/{{ g.id }}/delete" onsubmit="return confirm('حذف «{{ g.title }}» من المعرض؟');">
+          <button class="icon-btn danger" type="submit" title="حذف">{{ icon('trash') }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card"><p class="muted" style="padding:20px 0;text-align:center">لا توجد أعمال في المعرض بعد.</p></div>
+{% endif %}
+{% endblock %}

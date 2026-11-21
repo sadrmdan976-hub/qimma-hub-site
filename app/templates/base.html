@@ -1,0 +1,151 @@
+{% from "_icons.html" import icon, brand %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ s.site_name }} — {{ s.tagline }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ s.hero_sub }}{% endblock %}">
+<meta name="theme-color" content="#011025">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/static/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ s.site_name }}">
+<meta property="og:title" content="{{ s.site_name }} — {{ s.tagline }}">
+<meta property="og:description" content="{{ s.hero_sub }}">
+<meta property="og:image" content="{{ s.site_url }}/static/img/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/static/css/fonts.css">
+<link rel="stylesheet" href="/static/css/style.css">
+{% block head_extra %}{% endblock %}
+</head>
+<body>
+<a href="#main" class="hidden">انتقل إلى المحتوى</a>
+
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-items">
+      <span class="topbar-item" title="{{ s.address }}">{{ icon('pin') }}<span class="hide-sm">{{ s.address }}</span></span>
+      <span class="topbar-item hide-sm">{{ icon('clock') }}<span>{{ s.hours }}</span></span>
+      <a class="topbar-item" href="tel:{{ s.phone|wa }}">{{ icon('phone') }}<span dir="ltr">{{ s.phone }}</span></a>
+    </div>
+    <div class="topbar-social">
+      {% if s.facebook %}<a href="{{ s.facebook }}" target="_blank" rel="noopener" aria-label="فيسبوك">{{ brand('facebook') }}</a>{% endif %}
+      {% if s.instagram %}<a href="{{ s.instagram }}" target="_blank" rel="noopener" aria-label="إنستغرام">{{ brand('instagram') }}</a>{% endif %}
+      {% if s.whatsapp %}<a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" aria-label="واتساب">{{ brand('whatsapp') }}</a>{% endif %}
+      <a href="/admin" aria-label="لوحة الإدارة">{{ icon('lock') }}</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/" aria-label="{{ s.site_name }}">
+      <img src="/static/img/logo.png" alt="{{ s.site_name }} — {{ s.site_name_ar }}">
+    </a>
+    <nav class="nav" aria-label="التنقل الرئيسي">
+      <a href="/" class="{{ 'is-active' if path == '/' }}">الرئيسية</a>
+      <a href="/about" class="{{ 'is-active' if path.startswith('/about') }}">من نحن</a>
+      <a href="/services" class="{{ 'is-active' if path.startswith('/services') }}">خدماتنا</a>
+      <a href="/gallery" class="{{ 'is-active' if path.startswith('/gallery') }}">المعرض</a>
+      <a href="/pricing" class="{{ 'is-active' if path.startswith('/pricing') }}">الأسعار</a>
+      <a href="/faq" class="{{ 'is-active' if path.startswith('/faq') }}">الأسئلة الشائعة</a>
+      <a href="/contact" class="{{ 'is-active' if path.startswith('/contact') }}">تواصل معنا</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/order" class="btn btn-gold">{{ icon('sparkle') }}<span>اطلب تصميمك</span></a>
+      <button class="nav-toggle" type="button" data-nav-open aria-label="القائمة">{{ icon('menu') }}</button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" data-mobile-nav>
+  <div class="mobile-nav-panel">
+    <div class="mobile-nav-head">
+      <img src="/static/img/logo.png" alt="{{ s.site_name }}">
+      <button class="nav-toggle" type="button" data-nav-close aria-label="إغلاق">{{ icon('x') }}</button>
+    </div>
+    <a href="/">الرئيسية {{ icon('chevron-left') }}</a>
+    <a href="/about">من نحن {{ icon('chevron-left') }}</a>
+    <a href="/services">خدماتنا {{ icon('chevron-left') }}</a>
+    <a href="/gallery">معرض التصاميم {{ icon('chevron-left') }}</a>
+    <a href="/pricing">الأسعار والباقات {{ icon('chevron-left') }}</a>
+    <a href="/track">تتبع طلبك {{ icon('chevron-left') }}</a>
+    <a href="/faq">الأسئلة الشائعة {{ icon('chevron-left') }}</a>
+    <a href="/contact">تواصل معنا {{ icon('chevron-left') }}</a>
+    <a href="/order" class="btn btn-gold btn-block">{{ icon('sparkle') }} اطلب تصميمك الآن</a>
+    <a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" class="btn btn-outline btn-block">{{ brand('whatsapp') }} واتساب</a>
+  </div>
+</div>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/static/img/logo.png" alt="{{ s.site_name }}">
+        <p>{{ s.about_text|truncate(170, True, '…') }}</p>
+        <div class="footer-social">
+          {% if s.facebook %}<a href="{{ s.facebook }}" target="_blank" rel="noopener" aria-label="فيسبوك">{{ brand('facebook') }}</a>{% endif %}
+          {% if s.instagram %}<a href="{{ s.instagram }}" target="_blank" rel="noopener" aria-label="إنستغرام">{{ brand('instagram') }}</a>{% endif %}
+          {% if s.whatsapp %}<a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" aria-label="واتساب">{{ brand('whatsapp') }}</a>{% endif %}
+          {% if s.email %}<a href="mailto:{{ s.email }}" aria-label="البريد">{{ icon('mail') }}</a>{% endif %}
+        </div>
+      </div>
+      <div>
+        <h4>روابط سريعة</h4>
+        <div class="footer-links">
+          <a href="/about">{{ icon('chevron-left') }} من نحن</a>
+          <a href="/services">{{ icon('chevron-left') }} خدماتنا</a>
+          <a href="/pricing">{{ icon('chevron-left') }} الأسعار والباقات</a>
+          <a href="/gallery">{{ icon('chevron-left') }} معرض التصاميم</a>
+          <a href="/faq">{{ icon('chevron-left') }} الأسئلة الشائعة</a>
+          <a href="/track">{{ icon('chevron-left') }} تتبع طلبك</a>
+        </div>
+      </div>
+      <div>
+        <h4>خدماتنا</h4>
+        <div class="footer-links">
+          {% for c in cats %}
+          <a href="/services#{{ c.slug }}">{{ icon('chevron-left') }} {{ c.name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      <div>
+        <h4>تواصل معنا</h4>
+        <div class="footer-contact">
+          <div>{{ icon('pin') }}<span>{{ s.address }}</span></div>
+          <div>{{ icon('phone') }}<a href="tel:{{ s.phone|wa }}" dir="ltr">{{ s.phone }}</a></div>
+          <div>{{ icon('mail') }}<a href="mailto:{{ s.email }}">{{ s.email }}</a></div>
+          <div>{{ icon('clock') }}<span>{{ s.hours }}</span></div>
+        </div>
+        <div class="footer-qr">
+          <img src="/qr.png" alt="رمز QR لرابط الموقع" loading="lazy">
+          <span>امسح الرمز للوصول<br>إلى الموقع ومشاركته مع أصدقائك</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {{ year }} {{ s.site_name }} — {{ s.site_name_ar }}. جميع الحقوق محفوظة.</span>
+      <span><a href="/admin">لوحة الإدارة</a> · داخل جامعة القمة</span>
+    </div>
+  </div>
+</footer>
+
+{% if s.whatsapp %}
+<a class="wa-float" href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">{{ brand('whatsapp') }}</a>
+{% endif %}
+
+<div class="lightbox" data-lightbox>
+  <button class="lightbox-close" type="button" data-lightbox-close aria-label="إغلاق">{{ icon('x') }}</button>
+  <img alt="معاينة التصميم">
+</div>
+
+<script src="/static/js/site.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

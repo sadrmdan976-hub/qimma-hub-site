@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ 'تعديل باقة' if pkg else 'باقة جديدة' }} — {{ s.site_name }}{% endblock %}
+{% block page_title %}{{ pkg.name if pkg else 'باقة جديدة' }}{% endblock %}
+{% block page_sub %}تفاصيل الباقة وأسعارها{% endblock %}
+{% block page_actions %}<a href="/admin/packages" class="btn btn-light">{{ icon('chevron-left') }} الباقات</a>{% endblock %}
+
+{% block content %}
+<div class="card">
+  <form class="admin-form" method="post" action="{{ ('/admin/packages/' ~ pkg.id) if pkg else '/admin/packages/new' }}">
+    <div class="form-grid">
+      <div class="field">
+        <label for="name">اسم الباقة <span class="req">*</span></label>
+        <input class="input" id="name" name="name" value="{{ pkg.name if pkg else '' }}" required>
+      </div>
+      <div class="field">
+        <label for="tagline">وصف مختصر</label>
+        <input class="input" id="tagline" name="tagline" value="{{ pkg.tagline if pkg else '' }}" placeholder="مثال: للطلبة والمشاريع الصغيرة">
+      </div>
+      <div class="field">
+        <label for="price">السعر ({{ s.currency }})</label>
+        <input class="input" id="price" name="price" type="number" step="0.5" min="0" value="{{ pkg.price if pkg else '' }}">
+      </div>
+      <div class="field">
+        <label for="old_price">السعر قبل الخصم <small class="hint">(اختياري)</small></label>
+        <input class="input" id="old_price" name="old_price" type="number" step="0.5" min="0" value="{{ pkg.old_price if pkg and pkg.old_price else '' }}">
+      </div>
+      <div class="field full">
+        <label for="features">مزايا الباقة <small class="hint">(كل ميزة في سطر منفصل)</small></label>
+        <textarea class="textarea" id="features" name="features" rows="6" placeholder="تصميم واحد&#10;تعديلين مجانيين&#10;تسليم خلال 48 ساعة">{{ pkg.features if pkg else '' }}</textarea>
+      </div>
+      <div class="field">
+        <label for="sort">الترتيب</label>
+        <input class="input" id="sort" name="sort" type="number" value="{{ pkg.sort if pkg else 0 }}">
+      </div>
+      <div class="field" style="justify-content:center;display:flex;gap:22px">
+        <label class="check-row"><input type="checkbox" name="featured" value="1" {{ 'checked' if pkg and pkg.featured }}> باقة مميزة</label>
+        <label class="check-row"><input type="checkbox" name="is_active" value="1" {{ 'checked' if (pkg.is_active if pkg else 1) }}> ظاهرة في الموقع</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:16px">
+      <button class="btn btn-gold" type="submit">{{ icon('check') }} {{ 'حفظ التعديلات' if pkg else 'إضافة الباقة' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

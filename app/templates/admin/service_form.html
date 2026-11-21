@@ -1,0 +1,132 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ 'تعديل خدمة' if sv else 'خدمة جديدة' }} — {{ s.site_name }}{% endblock %}
+{% block page_title %}{{ sv.name if sv else 'خدمة جديدة' }}{% endblock %}
+{% block page_sub %}{{ 'عدّل بيانات الخدمة وقوالبها' if sv else 'أضف خدمة جديدة ثم أضف لها القوالب' }}{% endblock %}
+{% block page_actions %}
+<a href="/admin/services" class="btn btn-light">{{ icon('chevron-left') }} كل الخدمات</a>
+{% if sv %}<a href="/services/{{ sv.slug }}" target="_blank" class="btn btn-light">{{ icon('eye') }} عرض في الموقع</a>{% endif %}
+{% endblock %}
+
+{% block content %}
+{% set palettes = {'navy':'كحلي','royal':'ملكي','emerald':'زمردي','burgundy':'عنابي','plum':'بنفسجي','teal':'أزرق مخضر','sand':'رملي'} %}
+
+<div class="card">
+  <form class="admin-form" method="post" action="{{ ('/admin/services/' ~ sv.id) if sv else '/admin/services/new' }}">
+    <div class="form-grid">
+      <div class="field">
+        <label for="name">اسم الخدمة <span class="req">*</span></label>
+        <input class="input" id="name" name="name" value="{{ sv.name if sv else '' }}" required>
+      </div>
+      <div class="field">
+        <label for="category_id">القسم</label>
+        <select class="select" id="category_id" name="category_id" required>
+          {% for c in cats %}
+          <option value="{{ c.id }}" {{ 'selected' if sv and sv.category_id == c.id }}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field full">
+        <label for="summary">وصف مختصر</label>
+        <input class="input" id="summary" name="summary" value="{{ sv.summary if sv else '' }}" maxlength="180">
+        <small class="hint">يظهر في بطاقة الخدمة داخل الموقع.</small>
+      </div>
+      <div class="field full">
+        <label for="description">الوصف الكامل</label>
+        <textarea class="textarea" id="description" name="description">{{ sv.description if sv else '' }}</textarea>
+      </div>
+      <div class="field">
+        <label for="price">السعر ({{ currency }})</label>
+        <input class="input" id="price" name="price" inputmode="decimal" value="{{ sv.price|money if sv else '0' }}">
+      </div>
+      <div class="field">
+        <label for="price_note">عبارة السعر</label>
+        <input class="input" id="price_note" name="price_note" value="{{ sv.price_note if sv else 'يبدأ من' }}">
+      </div>
+      <div class="field">
+        <label for="unit">الوحدة (اختياري)</label>
+        <input class="input" id="unit" name="unit" value="{{ sv.unit if sv else '' }}" placeholder="مثال: / صفحة أو / قطعة">
+      </div>
+      <div class="field">
+        <label for="delivery_days">مدة التنفيذ (أيام)</label>
+        <input class="input" id="delivery_days" name="delivery_days" type="number" min="1" max="60" value="{{ sv.delivery_days if sv else 2 }}">
+      </div>
+      <div class="field">
+        <label for="sort">الترتيب</label>
+        <input class="input" id="sort" name="sort" type="number" value="{{ sv.sort if sv else 0 }}">
+      </div>
+      <div class="field" style="justify-content:flex-end;display:flex;flex-direction:column;gap:10px">
+        <label class="check-row"><input type="checkbox" name="is_active" value="1" {{ 'checked' if (sv.is_active if sv else 1) }}> منشورة في الموقع</label>
+        <label class="check-row"><input type="checkbox" name="featured" value="1" {{ 'checked' if sv and sv.featured }}> إظهارها في «الأكثر طلباً»</label>
+      </div>
+    </div>
+    <button class="btn btn-gold mt-3" type="submit">{{ icon('check') }} {{ 'حفظ التعديلات' if sv else 'إنشاء الخدمة' }}</button>
+  </form>
+</div>
+
+{% if sv %}
+<div class="card">
+  <div class="card-head">
+    <div><h2>القوالب ({{ tpls|length }})</h2><p>هذه القوالب تظهر للعميل ليختار منها عند الطلب. استبدل النماذج بصور أعمالك الحقيقية.</p></div>
+  </div>
+
+  {% if tpls %}
+  <div class="tpl-admin-grid">
+    {% for t in tpls %}
+    <div class="tpl-admin">
+      <img src="{{ media(t.image) if t.image else ('/preview/t/' ~ t.id ~ '.svg') }}" alt="{{ t.title }}" loading="lazy">
+      <div class="body">
+        <div><b>{{ t.title }}</b><span>{{ KIND_LABELS.get(t.kind, t.kind) }} · {{ palettes.get(t.palette, t.palette) }}</span></div>
+        <form class="inline-form" method="post" action="/admin/templates/{{ t.id }}/delete" onsubmit="return confirm('حذف القالب «{{ t.title }}»؟');">
+          <button class="icon-btn danger" type="submit" title="حذف">{{ icon('trash') }}</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted" style="padding:10px 0">لا توجد قوالب لهذه الخدمة بعد. أضف أول قالب من النموذج أدناه.</p>
+  {% endif %}
+
+  <div class="form-section-title">إضافة قالب جديد</div>
+  <form class="admin-form" method="post" action="/admin/services/{{ sv.id }}/templates" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="field">
+        <label for="tpl_title">اسم القالب <span class="req">*</span></label>
+        <input class="input" id="tpl_title" name="title" placeholder="مثال: قالب أكاديمي" required>
+      </div>
+      <div class="field">
+        <label for="tpl_kind">نوع التصميم</label>
+        <select class="select" id="tpl_kind" name="kind">
+          {% for key, label in KIND_LABELS.items() %}
+          <option value="{{ key }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="tpl_palette">الألوان</label>
+        <select class="select" id="tpl_palette" name="palette">
+          {% for key, label in palettes.items() %}
+          <option value="{{ key }}" {{ 'selected' if key == 'navy' }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <small class="hint">تُستخدم في النموذج التوضيحي إذا لم ترفع صورة.</small>
+      </div>
+      <div class="field">
+        <label for="tpl_sort">الترتيب</label>
+        <input class="input" id="tpl_sort" name="sort" type="number" value="0">
+      </div>
+      <div class="field full">
+        <label for="tpl_image">صورة القالب <small class="hint">(JPG / PNG / WEBP — اختياري)</small></label>
+        <input class="input" id="tpl_image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp">
+        <small class="hint">بدون صورة سيُنشأ نموذج توضيحي تلقائي بالمواصفات المختارة.</small>
+      </div>
+    </div>
+    <button class="btn btn-dark mt-3" type="submit">{{ icon('plus') }} إضافة القالب</button>
+  </form>
+</div>
+{% else %}
+<div class="alert alert--warn" style="margin-top:20px">{{ icon('info') }}<span>بعد إنشاء الخدمة ستتمكن من إضافة القوالب والصور الخاصة بها.</span></div>
+{% endif %}
+{% endblock %}

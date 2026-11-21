@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import section_head, service_card, gallery_card, package_card, faq_item, cat_icon %}
+
+{% block title %}{{ s.site_name }} — {{ s.site_name_ar }} | {{ s.tagline }}{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <span class="eyebrow">QIMMA HUB · داخل جامعة القمة</span>
+      <h1>كل خدماتك الجامعية<br>في <span class="gold">مكان واحد</span></h1>
+      <p class="lead">{{ s.hero_sub }}</p>
+      <div class="hero-cta">
+        <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} اطلب تصميمك الآن</a>
+        <a href="/services" class="btn btn-outline btn-lg">تصفح الخدمات {{ icon('chevron-left') }}</a>
+      </div>
+      <div class="hero-chips">
+        <span class="hero-chip">{{ icon('layers') }} 36+ خدمة جامعية</span>
+        <span class="hero-chip">{{ icon('image') }} قوالب متعددة لكل طلب</span>
+        <span class="hero-chip">{{ icon('truck') }} تسليم إلكتروني أو طباعة</span>
+      </div>
+    </div>
+    <div class="hero-media">
+      <div class="hero-frame">
+        <img src="/static/img/building.jpg" alt="مبنى مركز القمة للخدمات الجامعية" fetchpriority="high">
+      </div>
+      <div class="hero-stamp"><div><b>QH</b><span>خدمات جامعية</span></div></div>
+      <div class="hero-float">
+        <span class="icon-tile">{{ icon('pin') }}</span>
+        <div>
+          <b>نحن داخل الجامعة</b>
+          <span>{{ s.address }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <div class="container">
+    <div class="trust-item">{{ icon('shield') }} جودة عالية</div>
+    <div class="trust-item">{{ icon('clock') }} سرعة في التنفيذ</div>
+    <div class="trust-item">{{ icon('tag') }} أسعار مناسبة</div>
+    <div class="trust-item">{{ icon('star') }} ثقة واحترافية</div>
+    <div class="trust-item">{{ icon('users') }} لدينا نخدمكم</div>
+  </div>
+</div>
+
+<section class="section section--cream">
+  <div class="container">
+    {{ section_head('خدماتنا', 'خمسة أقسام تخدمك طوال العام الدراسي', 'من عروض المحاضرات إلى شهادات الفعاليات والطباعة والتجهيز — كل ما تحتاجه في مكان واحد وبأسعار واضحة.', action_href='/services', action_label='كل الخدمات') }}
+    <div class="cat-grid">
+      {% for item in cats_with_counts %}
+      <a class="cat-card reveal" href="/services#{{ item.cat.slug }}" style="transition-delay: {{ loop.index0 * 60 }}ms">
+        <span class="icon-tile">{{ cat_icon(item.cat.slug) }}</span>
+        <h3>{{ item.cat.name }}</h3>
+        <p>{{ item.cat.description }}</p>
+        <span class="count">{{ item.count }} خدمة {{ icon('chevron-left') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--paper">
+  <div class="container">
+    {{ section_head('الأكثر طلباً', 'خدمات يحبها الطلاب والأنشطة', 'اختر الخدمة، شاهد القوالب المتاحة، وأرسل طلبك في دقيقة واحدة.', action_href='/services', action_label='عرض الكل') }}
+    <div class="service-grid">
+      {% for sv in featured %}
+      {{ service_card(sv, currency, loop.index0 * 50) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    {{ section_head('كيف يعمل', 'طلبك يصلنا ويجهز في أربع خطوات', '', center=True) }}
+    <div class="steps">
+      <div class="step reveal">
+        <h3>اختر الخدمة والقالب</h3>
+        <p>تصفح الخدمات واختر القالب الأنسب لطلبك من القوالب المتعددة.</p>
+      </div>
+      <div class="step reveal">
+        <h3>أرسل بيانات الطلب</h3>
+        <p>املأ النموذج وارفع ملفاتك، وسيصلنا الطلب مباشرة إلى لوحة الإدارة.</p>
+      </div>
+      <div class="step reveal">
+        <h3>نؤكد السعر والموعد</h3>
+        <p>نراجع التفاصيل ونرسل لك تأكيد السعر ومدة التنفيذ عبر واتساب.</p>
+      </div>
+      <div class="step reveal">
+        <h3>استلم تصميمك</h3>
+        <p>نسلّمك الملفات النهائية إلكترونياً، أو تستلم المطبوعات من المركز.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--navy">
+  <div class="container">
+    {{ section_head('لماذا القمة', 'جودة تشبهك، وسرعة تناسب وقتك', '', center=True) }}
+    <div class="feature-grid">
+      <div class="feature reveal">
+        <span class="icon-tile">{{ icon('shield') }}</span>
+        <h3>جودة عالية</h3>
+        <p>تصاميم مدروسة بتفاصيل دقيقة ومراجعة قبل التسليم.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="icon-tile">{{ icon('clock') }}</span>
+        <h3>سرعة في التنفيذ</h3>
+        <p>ملفات بسيطة خلال نفس اليوم، والتصاميم خلال أيام قليلة.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="icon-tile">{{ icon('tag') }}</span>
+        <h3>أسعار مناسبة</h3>
+        <p>أسعار واضحة لكل خدمة وباقات توفّر أكثر للطلبة والأنشطة.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="icon-tile">{{ icon('star') }}</span>
+        <h3>ثقة واحترافية</h3>
+        <p>التزام بالمواعيد وتعديلات مجانية لضمان رضاك.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="icon-tile">{{ icon('users') }}</span>
+        <h3>لدينا نخدمكم</h3>
+        <p>فريق متواجد داخل الجامعة وقريب من احتياجاتك.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--paper">
+  <div class="container">
+    {{ section_head('معرض التصاميم', 'نماذج من أعمالنا', 'لمحة من تصاميم الشهادات والدعوات والعروض والهويات التي ننفذها.', action_href='/gallery', action_label='المعرض كامل') }}
+    <div class="gallery-grid">
+      {% for item in gallery %}
+      {{ gallery_card(item) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    {{ section_head('الباقات', 'باقات تجمع لك الأكثر طلباً', 'وفّر أكثر عند طلب أكثر من خدمة في باقة واحدة.', action_href='/pricing', action_label='كل الأسعار') }}
+    <div class="package-grid">
+      {% for p in packages %}
+      {{ package_card(p, currency) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--paper">
+  <div class="container">
+    {{ section_head('الأسئلة الشائعة', 'أسئلة تتكرر كثيراً', '', center=True) }}
+    <div class="faq-list">
+      {% for f in faqs %}
+      {{ faq_item(f.question, f.answer) }}
+      {% endfor %}
+    </div>
+    <div class="center mt-4">
+      <a href="/faq" class="btn btn-light">كل الأسئلة الشائعة {{ icon('chevron-left') }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>جاهز تبدأ طلبك؟</h2>
+        <p>أرسل تفاصيل طلبك الآن، أو راسلنا مباشرة على واتساب وسنساعدك في الاختيار.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} اطلب تصميمك</a>
+        <a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" class="btn btn-outline btn-lg">{{ brand('whatsapp') }} واتساب</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

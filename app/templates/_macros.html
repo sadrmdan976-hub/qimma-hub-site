@@ -1,0 +1,85 @@
+{% from "_icons.html" import icon %}
+
+{% macro cat_icon(slug) -%}
+{%- if slug == 'students' -%}{{ icon('cap') }}{%- elif slug == 'activities' -%}{{ icon('megaphone') }}{%- elif slug == 'digital' -%}{{ icon('palette') }}{%- elif slug == 'printing' -%}{{ icon('printer') }}{%- elif slug == 'faculty' -%}{{ icon('building') }}{%- else -%}{{ icon('folder') }}{%- endif -%}
+{%- endmacro %}
+
+{% macro section_head(eyebrow, title, sub='', center=False, action_href='', action_label='') %}
+<div class="section-head {{ 'section-head--center' if center }}">
+  <div>
+    {% if eyebrow %}<span class="eyebrow">{{ eyebrow }}</span>{% endif %}
+    <h2>{{ title }}</h2>
+    {% if sub %}<p>{{ sub }}</p>{% endif %}
+  </div>
+  {% if action_href %}
+  <a class="btn btn-light" href="{{ action_href }}">{{ action_label }} {{ icon('chevron-left') }}</a>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro service_card(sv, currency, delay=0) %}
+<article class="service-card reveal" style="transition-delay: {{ delay }}ms">
+  <div class="icon-tile">{{ cat_icon(sv.category_slug) }}</div>
+  <h3><a href="/services/{{ sv.slug }}">{{ sv.name }}</a></h3>
+  <p class="desc">{{ sv.summary }}</p>
+  <div class="meta">
+    <div class="price">
+      <small>{{ sv.price_note }}</small>
+      <b>{{ sv.price|money }}</b>
+      <span class="unit">{{ currency }}{% if sv.unit %} {{ sv.unit }}{% endif %}</span>
+    </div>
+    <a class="chip" href="/order?service={{ sv.slug }}">اطلب الآن {{ icon('chevron-left') }}</a>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro gallery_card(item) %}
+<a class="gallery-item" href="{{ media(item.image) if item.image else ('/preview/g/' ~ item.id ~ '.svg') }}" data-lightbox-src="{{ media(item.image) if item.image else ('/preview/g/' ~ item.id ~ '.svg') }}" data-lightbox-title="{{ item.title }}">
+  <img src="{{ media(item.image) if item.image else ('/preview/g/' ~ item.id ~ '.svg') }}" alt="{{ item.title }}" loading="lazy">
+  <div class="overlay">
+    <b>{{ item.title }}</b>
+    <span>{{ item.category or KIND_LABELS.get(item.kind, '') }}</span>
+  </div>
+</a>
+{% endmacro %}
+
+{% macro tpl_thumb(t, badge=False) %}
+<div class="tpl-option">
+  <span class="tpl-card">
+    <img src="{{ media(t.image) if t.image else ('/preview/t/' ~ t.id ~ '.svg') }}" alt="{{ t.title }}" loading="lazy">
+    <span>{{ t.title }}</span>
+  </span>
+</div>
+{% endmacro %}
+
+{% macro status_badge(status) %}
+{% set colors = {'new': '#8A6423', 'review': '#8A6423', 'working': '#1F5F9E', 'ready': '#1C6B43', 'done': '#4B5A6D', 'cancelled': '#9C2B21'} %}
+{% set bgs = {'new': '#F6EEDD', 'review': '#F6EEDD', 'working': '#E7F0FA', 'ready': '#E9F7EF', 'done': '#EEF1F5', 'cancelled': '#FBEDEC'} %}
+<span class="badge-soft" style="color: {{ colors.get(status, '#4B5A6D') }}; background: {{ bgs.get(status, '#EEF1F5') }}">{{ STATUSES.get(status, status) }}</span>
+{% endmacro %}
+
+{% macro package_card(p, currency) %}
+<div class="package {{ 'is-featured' if p.featured }}">
+  {% if p.featured %}<span class="pkg-badge">الأكثر اختياراً</span>{% endif %}
+  <h3>{{ p.name }}</h3>
+  <span class="pkg-tag">{{ p.tagline }}</span>
+  <div class="pkg-price">
+    <b>{{ p.price|money }}</b><span>{{ currency }}</span>
+    {% if p.old_price %}<s>{{ p.old_price|money }} {{ currency }}</s>{% endif %}
+  </div>
+  <ul>
+    {% for f in p.features.splitlines() if f.strip() %}
+    <li>{{ icon('check') }}<span>{{ f }}</span></li>
+    {% endfor %}
+  </ul>
+  <a href="/order" class="btn {{ 'btn-gold' if p.featured else 'btn-dark' }} btn-block">اطلب الباقة {{ icon('chevron-left') }}</a>
+</div>
+{% endmacro %}
+
+{% macro faq_item(q, a) %}
+<details class="faq-item">
+  <summary><span>{{ q }}</span><span class="plus" aria-hidden="true"></span></summary>
+  <div class="faq-body">{{ a }}</div>
+</details>
+{% endmacro %}
+

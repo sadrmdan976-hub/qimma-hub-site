@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+
+{% block title %}من نحن — {{ s.site_name }}{% endblock %}
+{% block description %}{{ s.about_text|truncate(160, True, '…') }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>من نحن</span></div>
+    <h1>من نحن</h1>
+    <p>منصة خدمات جامعية متكاملة داخل جامعة القمة، تجمع التصميم والتنسيق والطباعة والتجهيز تحت سقف واحد.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container about-grid">
+    <div class="about-media reveal">
+      <div class="main"><img src="/static/img/interior.jpg" alt="استقبال مركز القمة للخدمات الجامعية" loading="lazy"></div>
+      <div class="side"><img src="/static/img/building.jpg" alt="مبنى المركز داخل جامعة القمة" loading="lazy"></div>
+    </div>
+    <div class="about-copy reveal">
+      <span class="eyebrow">فكرة المشروع</span>
+      <h2>خدمات جامعية بمعايير احترافية</h2>
+      <p>{{ s.about_text }}</p>
+      <p>بدأت الفكرة من حاجة الطالب والجهة الجامعية لجهة واحدة موثوقة تنجز التصميم والتنسيق والطباعة بجودة وسرعة. اليوم يقدم المركز خدماته للطلبة وأعضاء هيئة التدريس والأنشطة الجامعية والمؤسسات.</p>
+      <div class="value-list">
+        <div class="value-item">
+          <span class="icon-tile">{{ icon('shield') }}</span>
+          <div><b>جودة عالية</b><span>تصاميم مدروسة ومراجعة دقيقة قبل التسليم.</span></div>
+        </div>
+        <div class="value-item">
+          <span class="icon-tile">{{ icon('clock') }}</span>
+          <div><b>سرعة في التنفيذ</b><span>التزام بالمواعيد مع خيار الإنجاز المستعجل.</span></div>
+        </div>
+        <div class="value-item">
+          <span class="icon-tile">{{ icon('tag') }}</span>
+          <div><b>أسعار مناسبة</b><span>أسعار واضحة وباقات توفيرية للطلبة والأنشطة.</span></div>
+        </div>
+        <div class="value-item">
+          <span class="icon-tile">{{ icon('star') }}</span>
+          <div><b>ثقة واحترافية</b><span>تعديلات مجانية وتعامل مباشر مع فريق المركز.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--navy">
+  <div class="container">
+    <div class="stats-band">
+      <div class="stat reveal"><b>{{ stats.services }}+</b><span>خدمة جامعية</span></div>
+      <div class="stat reveal"><b>{{ stats.categories }}</b><span>أقسام خدمية</span></div>
+      <div class="stat reveal"><b>{{ stats.templates }}+</b><span>قالب تصميم</span></div>
+      <div class="stat reveal"><b>{{ stats.orders }}+</b><span>طلب تم استقباله</span></div>
+    </div>
+    <div class="center mt-5">
+      <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} ابدأ طلبك الآن</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="split-2">
+      <div>
+        <span class="eyebrow">أهدافنا</span>
+        <h2 style="margin:10px 0 18px">لماذا أنشأنا QIMMA HUB؟</h2>
+        <ul class="list-check">
+          <li>{{ icon('check-circle') }}<span>توفير منصة إلكترونية موحدة للتعريف بالخدمات واستقبال الطلبات.</span></li>
+          <li>{{ icon('check-circle') }}<span>تسهيل حصول الطالب على خدمات حيوية دون بحث وتنقل.</span></li>
+          <li>{{ icon('check-circle') }}<span>رفع جودة مخرجات الأنشطة والفعاليات الجامعية.</span></li>
+          <li>{{ icon('check-circle') }}<span>دعم أعضاء هيئة التدريس والمؤسسات بمواد بصرية احترافية.</span></li>
+          <li>{{ icon('check-circle') }}<span>جمع التصميم والطباعة والتجهيز في تجربة طلب واحدة.</span></li>
+        </ul>
+      </div>
+      <div class="qr-card">
+        <img src="/qr.png" alt="رمز QR لموقع المركز" loading="lazy">
+        <div>
+          <h3>شارك الموقع مع أصدقائك</h3>
+          <p>امسح رمز QR أو أرسل الرابط — كل خدمات الجامعة في متناول يدك.</p>
+          <a href="/contact" class="btn btn-gold btn-sm mt-3">بيانات التواصل {{ icon('chevron-left') }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

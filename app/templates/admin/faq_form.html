@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ 'تعديل سؤال' if faq else 'سؤال جديد' }} — {{ s.site_name }}{% endblock %}
+{% block page_title %}{{ 'تعديل السؤال' if faq else 'سؤال جديد' }}{% endblock %}
+{% block page_sub %}اكتب السؤال والإجابة كما ستظهران للعميل{% endblock %}
+{% block page_actions %}<a href="/admin/faqs" class="btn btn-light">{{ icon('chevron-left') }} الأسئلة</a>{% endblock %}
+
+{% block content %}
+<div class="card">
+  <form class="admin-form" method="post" action="{{ ('/admin/faqs/' ~ faq.id) if faq else '/admin/faqs/new' }}">
+    <div class="form-grid">
+      <div class="field full">
+        <label for="question">السؤال <span class="req">*</span></label>
+        <input class="input" id="question" name="question" value="{{ faq.question if faq else '' }}" required>
+      </div>
+      <div class="field full">
+        <label for="answer">الإجابة <span class="req">*</span></label>
+        <textarea class="textarea" id="answer" name="answer" rows="6" required>{{ faq.answer if faq else '' }}</textarea>
+      </div>
+      <div class="field">
+        <label for="sort">الترتيب</label>
+        <input class="input" id="sort" name="sort" type="number" value="{{ faq.sort if faq else 0 }}">
+      </div>
+      <div class="field" style="justify-content:flex-end;display:flex">
+        <label class="check-row"><input type="checkbox" name="is_active" value="1" {{ 'checked' if (faq.is_active if faq else 1) }}> ظاهر في الموقع</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:16px">
+      <button class="btn btn-gold" type="submit">{{ icon('check') }} {{ 'حفظ التعديلات' if faq else 'إضافة السؤال' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

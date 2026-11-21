@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import status_badge %}
+
+{% block title %}تتبع الطلب — {{ s.site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>تتبع الطلب</span></div>
+    <h1>تتبع طلبك</h1>
+    <p>أدخل رقم الطلب الذي استلمته بعد الإرسال (مثال: QH-20261121-001) لمعرفة حالة طلبك.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:820px">
+    <form class="form-card" method="get" action="/track">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="ref">رقم الطلب</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input class="input" id="ref" name="ref" value="{{ ref }}" placeholder="QH-20261121-001" style="flex:1;min-width:220px" dir="ltr">
+            <button class="btn btn-gold" type="submit">{{ icon('search') }} بحث</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    {% if not_found %}
+    <div class="alert alert--err mt-4">{{ icon('alert') }}<span>لم نجد طلباً بهذا الرقم. تأكد من كتابة الرقم كاملاً كما ظهر بعد إرسال الطلب.</span></div>
+    {% endif %}
+
+    {% if order %}
+    <div class="form-card mt-4">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+        <div>
+          <span class="eyebrow">رقم الطلب</span>
+          <h2 style="font-size:24px;margin-top:6px">{{ order.ref }}</h2>
+        </div>
+        {{ status_badge(order.status) }}
+      </div>
+      <table class="summary-table">
+        <tr><th>الخدمة</th><td>{{ order.service_name or '—' }}</td></tr>
+        <tr><th>القالب</th><td>{{ order.template_name or 'بدون قالب محدد' }}</td></tr>
+        <tr><th>الكمية</th><td>{{ order.quantity }}</td></tr>
+        {% if order.deadline %}<tr><th>الموعد المطلوب</th><td>{{ order.deadline }}</td></tr>{% endif %}
+        <tr><th>تاريخ الإرسال</th><td>{{ order.created_at[:16]|replace('T', ' — ') }}</td></tr>
+        <tr><th>آخر تحديث</th><td>{{ order.updated_at[:16]|replace('T', ' — ') }}</td></tr>
+        {% if order.quote %}<tr><th>السعر المعتمد</th><td>{{ order.quote|money }} {{ currency }}</td></tr>{% endif %}
+        {% if order.admin_note %}<tr><th>ملاحظات المركز</th><td style="font-weight:500;white-space:pre-line">{{ order.admin_note }}</td></tr>{% endif %}
+      </table>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="https://wa.me/{{ s.whatsapp|wa }}?text={{ ('استفسار عن الطلب ' ~ order.ref)|urlencode }}" target="_blank" rel="noopener" class="btn btn-green">{{ brand('whatsapp') }} استفسار عن الطلب</a>
+        <a href="/order" class="btn btn-light">{{ icon('plus') }} طلب جديد</a>
+      </div>
+    </div>
+    {% elif not ref %}
+    <div class="note-box mt-4">{{ icon('info') }}<span>رقم الطلب يظهر بعد إرسال النموذج، ويُرسل أيضاً في ملخص واتساب.</span></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import section_head, package_card %}
+
+{% block title %}الأسعار والباقات — {{ s.site_name }}{% endblock %}
+{% block description %}قائمة أسعار خدمات القمة الجامعية وباقات توفيرية للطلبة والأنشطة والمؤسسات.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>الأسعار والباقات</span></div>
+    <h1>الأسعار والباقات</h1>
+    <p>أسعار واضحة لكل خدمة، وباقات تجمع لك الأكثر طلباً بسعر أوفر. السعر النهائي يُؤكد بعد مراجعة تفاصيل الطلب.</p>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    {{ section_head('الباقات', 'باقات تجمع لك الأكثر طلباً', 'وفّر أكثر عند طلب أكثر من خدمة في باقة واحدة.', center=True) }}
+    <div class="package-grid">
+      {% for p in packages %}
+      {{ package_card(p, currency) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--paper">
+  <div class="container">
+    {{ section_head('قائمة الأسعار', 'أسعار الخدمات حسب القسم', 'كل الأسعار «تبدأ من» وقد تختلف حسب حجم العمل والكمية.') }}
+    {% for g in groups %}
+    <div class="price-block reveal">
+      <div class="price-block-head">
+        <span class="badge-soft">القسم {{ '%02d'|format(loop.index) }}</span>
+        <div>
+          <h3>{{ g.cat.name }}</h3>
+          <span>{{ g.services|length }} خدمة متاحة</span>
+        </div>
+      </div>
+      {% for sv in g.services %}
+      <div class="price-row">
+        <div class="name">{{ sv.name }}<small>{{ sv.summary }}</small></div>
+        <div class="days">{{ icon('clock') }} {{ sv.delivery_days }} {% if sv.delivery_days == 1 %}يوم{% elif sv.delivery_days == 2 %}يومان{% else %}أيام{% endif %}</div>
+        <div class="amount">{{ sv.price|money }} <small>{{ currency }}{% if sv.unit %} {{ sv.unit }}{% endif %}</small></div>
+        <div class="act"><a class="btn btn-light btn-sm" href="/order?service={{ sv.slug }}">اطلب</a></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="note-box">
+      {{ icon('info') }}
+      <span>الأسعار لا تشمل تكاليف الطباعة الخاصة (ورق فاخر، تجليد، مقاسات كبيرة) وتُحدد عند الطلب. للطلبات الكبيرة والمؤسسات نقدم عروضاً مخصصة عبر واتساب.</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>عندك طلب خاص؟</h2>
+        <p>أرسل تفاصيل المشروع وسنعد لك عرض سعر مخصصاً يناسب حجم العمل.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} اطلب الآن</a>
+        <a href="/contact" class="btn btn-outline btn-lg">تواصل معنا</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

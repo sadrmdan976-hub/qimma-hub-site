@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ 'تعديل عمل' if item else 'عمل جديد' }} — {{ s.site_name }}{% endblock %}
+{% block page_title %}{{ item.title if item else 'عمل جديد' }}{% endblock %}
+{% block page_sub %}بيانات العمل المعروض في معرض التصاميم{% endblock %}
+{% block page_actions %}<a href="/admin/gallery" class="btn btn-light">{{ icon('chevron-left') }} المعرض</a>{% endblock %}
+
+{% block content %}
+{% set palettes = {'navy':'كحلي','royal':'ملكي','emerald':'زمردي','burgundy':'عنابي','plum':'بنفسجي','teal':'أزرق مخضر','sand':'رملي'} %}
+<div class="card">
+  <form class="admin-form" method="post" action="{{ ('/admin/gallery/' ~ item.id) if item else '/admin/gallery/new' }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="field">
+        <label for="title">عنوان العمل <span class="req">*</span></label>
+        <input class="input" id="title" name="title" value="{{ item.title if item else '' }}" required>
+      </div>
+      <div class="field">
+        <label for="category">التصنيف</label>
+        <input class="input" id="category" name="category" value="{{ item.category if item else '' }}" placeholder="مثال: شهادات، دعوات، عروض">
+      </div>
+      <div class="field">
+        <label for="kind">نوع التصميم</label>
+        <select class="select" id="kind" name="kind">
+          {% for key, label in KIND_LABELS.items() %}
+          <option value="{{ key }}" {{ 'selected' if item and item.kind == key }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="palette">الألوان</label>
+        <select class="select" id="palette" name="palette">
+          {% for key, label in palettes.items() %}
+          <option value="{{ key }}" {{ 'selected' if (item and item.palette == key) or (not item and key == 'navy') }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="sort">الترتيب</label>
+        <input class="input" id="sort" name="sort" type="number" value="{{ item.sort if item else 0 }}">
+      </div>
+      <div class="field" style="justify-content:flex-end;display:flex">
+        <label class="check-row"><input type="checkbox" name="is_active" value="1" {{ 'checked' if (item.is_active if item else 1) }}> منشور في المعرض</label>
+      </div>
+      <div class="field full">
+        <label for="image">صورة العمل <small class="hint">(JPG / PNG / WEBP — اختياري)</small></label>
+        <input class="input" id="image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp">
+        <small class="hint">بدون صورة سيُنشأ نموذج توضيحي تلقائي. ارفع صور أعمالك الحقيقية للحصول على أفضل عرض.</small>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-gold" type="submit">{{ icon('check') }} {{ 'حفظ التعديلات' if item else 'إضافة العمل' }}</button>
+      {% if item %}
+      <a class="btn btn-light" href="{{ media(item.image) if item.image else ('/preview/g/' ~ item.id ~ '.svg') }}" target="_blank">{{ icon('eye') }} معاينة</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

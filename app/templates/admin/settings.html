@@ -1,0 +1,132 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}الإعدادات — {{ s.site_name }}{% endblock %}
+{% block page_title %}الإعدادات{% endblock %}
+{% block page_sub %}بيانات الموقع والتواصل ورمز QR وكلمة المرور{% endblock %}
+
+{% block content %}
+<div class="settings-grid">
+
+  <div class="card">
+    <div class="card-head">
+      <div><h2>بيانات الموقع والتواصل</h2><p>هذه القيم تظهر في كل صفحات الموقع</p></div>
+    </div>
+    <form class="admin-form" method="post" action="/admin/settings">
+      <h3 style="font-size:13px;color:#9C7228;margin-bottom:10px">هوية الموقع</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="site_name">الاسم بالإنجليزية</label>
+          <input class="input" id="site_name" name="site_name" value="{{ s.site_name }}" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="site_name_ar">اسم المركز بالعربية</label>
+          <input class="input" id="site_name_ar" name="site_name_ar" value="{{ s.site_name_ar }}">
+        </div>
+        <div class="field full">
+          <label for="tagline">الشعار النصي</label>
+          <input class="input" id="tagline" name="tagline" value="{{ s.tagline }}">
+        </div>
+        <div class="field full">
+          <label for="hero_title">عنوان الواجهة الرئيسية</label>
+          <input class="input" id="hero_title" name="hero_title" value="{{ s.hero_title }}">
+        </div>
+        <div class="field full">
+          <label for="hero_sub">النص التعريفي في الواجهة</label>
+          <textarea class="textarea" id="hero_sub" name="hero_sub" rows="3">{{ s.hero_sub }}</textarea>
+        </div>
+        <div class="field full">
+          <label for="about_text">نص «من نحن»</label>
+          <textarea class="textarea" id="about_text" name="about_text" rows="4">{{ s.about_text }}</textarea>
+        </div>
+      </div>
+
+      <h3 style="font-size:13px;color:#9C7228;margin:18px 0 10px">بيانات التواصل</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="whatsapp">رقم واتساب <small class="hint">(بصيغة دولية بدون +)</small></label>
+          <input class="input" id="whatsapp" name="whatsapp" value="{{ s.whatsapp }}" dir="ltr" placeholder="218911234567">
+        </div>
+        <div class="field">
+          <label for="phone">رقم الهاتف المعروض</label>
+          <input class="input" id="phone" name="phone" value="{{ s.phone }}" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="email">البريد الإلكتروني</label>
+          <input class="input" id="email" name="email" type="email" value="{{ s.email }}" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="hours">ساعات العمل</label>
+          <input class="input" id="hours" name="hours" value="{{ s.hours }}">
+        </div>
+        <div class="field full">
+          <label for="address">العنوان</label>
+          <input class="input" id="address" name="address" value="{{ s.address }}">
+        </div>
+      </div>
+
+      <h3 style="font-size:13px;color:#9C7228;margin:18px 0 10px">الروابط والإعدادات العامة</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="facebook">رابط فيسبوك</label>
+          <input class="input" id="facebook" name="facebook" value="{{ s.facebook }}" dir="ltr" placeholder="https://facebook.com/...">
+        </div>
+        <div class="field">
+          <label for="instagram">رابط إنستغرام</label>
+          <input class="input" id="instagram" name="instagram" value="{{ s.instagram }}" dir="ltr" placeholder="https://instagram.com/...">
+        </div>
+        <div class="field">
+          <label for="site_url">رابط الموقع (يُشفّر في QR)</label>
+          <input class="input" id="site_url" name="site_url" value="{{ s.site_url }}" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="currency">رمز العملة</label>
+          <input class="input" id="currency" name="currency" value="{{ s.currency }}">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:18px">
+        <button class="btn btn-gold" type="submit">{{ icon('check') }} حفظ الإعدادات</button>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <div class="card">
+      <div class="card-head"><div><h2>رمز QR للمشروع</h2><p>اطبعه وضعه في المطبوعات</p></div></div>
+      <div class="mini-qr">
+        <img src="/qr.png" alt="QR">
+        <div>
+          <b>{{ s.site_name }}</b>
+          <span>يفتح الرابط:<br><span dir="ltr" style="word-break:break-all">{{ s.site_url }}</span></span>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:12px">عند تغيير رابط الموقع في الحقول المجاورة، يتحدث رمز QR تلقائياً بعد الحفظ. يمكنك تنزيله كصورة:</p>
+      <a class="btn btn-light btn-block" href="/qr.png" download="qimma-qr.png" style="margin-top:8px">{{ icon('download') }} تنزيل رمز QR</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div><h2>كلمة مرور الإدارة</h2><p>8 أحرف على الأقل</p></div></div>
+      {% if password_default %}
+      <div class="alert alert--err" style="margin-bottom:14px">{{ icon('alert') }}<span>ما زلت تستخدم كلمة المرور الافتراضية — غيّرها الآن.</span></div>
+      {% endif %}
+      <form class="admin-form" method="post" action="/admin/password">
+        <div class="field" style="margin-bottom:12px">
+          <label for="current">كلمة المرور الحالية</label>
+          <input class="input" id="current" name="current" type="password" required autocomplete="current-password">
+        </div>
+        <div class="field" style="margin-bottom:12px">
+          <label for="new">كلمة المرور الجديدة</label>
+          <input class="input" id="new" name="new" type="password" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="field" style="margin-bottom:12px">
+          <label for="confirm">تأكيد كلمة المرور</label>
+          <input class="input" id="confirm" name="confirm" type="password" required minlength="8" autocomplete="new-password">
+        </div>
+        <button class="btn btn-dark btn-block" type="submit">{{ icon('lock') }} تغيير كلمة المرور</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}الباقات — {{ s.site_name }}{% endblock %}
+{% block page_title %}الباقات{% endblock %}
+{% block page_sub %}باقات الخدمات المعروضة في صفحة الأسعار{% endblock %}
+{% block page_actions %}
+<a href="/admin/packages/new" class="btn btn-gold">{{ icon('plus') }} باقة جديدة</a>
+{% endblock %}
+
+{% block content %}
+{% if packages %}
+<div class="pkg-admin">
+  {% for p in packages %}
+  <div class="pkg-admin-card {{ 'featured' if p.featured }}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div>
+        <h3>{{ p.name }}</h3>
+        <span class="sub">{{ p.tagline }}</span>
+      </div>
+      <span style="font-size:11px;color:{{ '#9C7228' if p.is_active else '#A53125' }}">{{ 'ظاهرة' if p.is_active else 'مخفية' }}</span>
+    </div>
+    <div class="price-line">{{ p.price|money }} {{ s.currency }}
+      {% if p.old_price %}<s style="font-size:13px;color:#9AA5B5;font-weight:400">{{ p.old_price|money }}</s>{% endif %}
+    </div>
+    <ul>
+      {% for f in p.features.splitlines() if f.strip() %}
+      <li>{{ icon('check') }}<span>{{ f }}</span></li>
+      {% endfor %}
+    </ul>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <span class="sub">ترتيب {{ p.sort }}{% if p.featured %} · مميزة{% endif %}</span>
+      <div style="display:flex;gap:6px">
+        <a class="icon-btn" href="/admin/packages/{{ p.id }}" title="تعديل">{{ icon('edit') }}</a>
+        <form class="inline-form" method="post" action="/admin/packages/{{ p.id }}/delete" onsubmit="return confirm('حذف باقة «{{ p.name }}»؟');">
+          <button class="icon-btn danger" type="submit" title="حذف">{{ icon('trash') }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card"><p class="muted" style="text-align:center;padding:20px 0">لا توجد باقات بعد.</p></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}الأسئلة الشائعة — {{ s.site_name }}{% endblock %}
+{% block page_title %}الأسئلة الشائعة{% endblock %}
+{% block page_sub %}الأسئلة التي تظهر للعملاء في صفحة الأسئلة الشائعة{% endblock %}
+{% block page_actions %}
+<a href="/admin/faqs/new" class="btn btn-gold">{{ icon('plus') }} سؤال جديد</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  {% if faqs %}
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th style="width:50px">الترتيب</th>
+          <th>السؤال</th>
+          <th>الإجابة</th>
+          <th style="width:90px">الحالة</th>
+          <th style="width:100px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in faqs %}
+        <tr>
+          <td>{{ f.sort }}</td>
+          <td style="max-width:280px"><b>{{ f.question }}</b></td>
+          <td style="max-width:420px"><span class="sub">{{ f.answer }}</span></td>
+          <td>{{ 'ظاهر' if f.is_active else 'مخفي' }}</td>
+          <td class="actions">
+            <a class="icon-btn" href="/admin/faqs/{{ f.id }}" title="تعديل">{{ icon('edit') }}</a>
+            <form class="inline-form" method="post" action="/admin/faqs/{{ f.id }}/delete" onsubmit="return confirm('حذف هذا السؤال؟');">
+              <button class="icon-btn danger" type="submit" title="حذف">{{ icon('trash') }}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted" style="text-align:center;padding:20px 0">لا توجد أسئلة بعد — أضف أول سؤال.</p>
+  {% endif %}
+</div>
+{% endblock %}

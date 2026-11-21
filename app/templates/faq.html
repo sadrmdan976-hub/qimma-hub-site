@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import faq_item %}
+
+{% block title %}الأسئلة الشائعة — {{ s.site_name }}{% endblock %}
+{% block description %}كل ما تحتاج معرفته عن مدة التنفيذ والتعديلات وطريقة استلام التصميم والدفع في مركز القمة للخدمات الجامعية.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>الأسئلة الشائعة</span></div>
+    <h1>الأسئلة الشائعة</h1>
+    <p>جمعنا لك أكثر الأسئلة التي تصلنا حول مدة التنفيذ والتعديلات وطريقة الاستلام والدفع.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="faq-list">
+      {% for f in faqs %}
+      {{ faq_item(f.question, f.answer) }}
+      {% endfor %}
+    </div>
+
+    <div class="split-2 mt-5">
+      <div class="note-box" style="align-items:flex-start">
+        {{ icon('help') }}
+        <span>لم تجد إجابة سؤالك؟ راسلنا على واتساب وسنجيبك خلال دقائق في أوقات العمل.{{ ' ' }}<a href="https://wa.me/{{ s.whatsapp|wa }}" target="_blank" rel="noopener" style="font-weight:700;color:#8A6423">اضغط هنا للمحادثة</a></span>
+      </div>
+      <div class="note-box" style="align-items:flex-start;background:#EEF5FB;border-color:#CFE1F2;color:#20527D">
+        {{ icon('search') }}
+        <span>لديك طلب سابق؟ تابع حالته برقم الطلب من صفحة <a href="/track" style="font-weight:700;text-decoration:underline">تتبع الطلب</a>.</span>
+      </div>
+    </div>
+
+    <div class="center mt-5">
+      <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} جاهز للطلب؟ ابدأ الآن</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

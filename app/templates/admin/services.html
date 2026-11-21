@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import cat_icon %}
+
+{% block title %}الخدمات والقوالب — {{ s.site_name }}{% endblock %}
+{% block page_title %}الخدمات والقوالب{% endblock %}
+{% block page_sub %}أضف وعدّل الخدمات والأسعار والقوالب التي يختار منها العميل{% endblock %}
+{% block page_actions %}
+<a href="/admin/services/new" class="btn btn-gold">{{ icon('plus') }} خدمة جديدة</a>
+{% endblock %}
+
+{% block content %}
+{% for g in groups %}
+<div class="card">
+  <div class="card-head">
+    <div class="product-row">
+      <span class="icon-tile" style="width:42px;height:42px;border-radius:11px">{{ cat_icon(g.cat.slug) }}</span>
+      <div>
+        <h2>{{ g.cat.name }}</h2>
+        <p>{{ g.services|length }} خدمة</p>
+      </div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>الخدمة</th><th>السعر</th><th>التنفيذ</th><th>القوالب</th><th>الحالة</th><th></th></tr></thead>
+      <tbody>
+        {% for sv in g.services %}
+        <tr>
+          <td><b style="color:var(--navy-800)">{{ sv.name }}</b><span class="sub">{{ sv.summary|truncate(70, True, '…') }}</span></td>
+          <td>{{ sv.price|money }} {{ currency }}{% if sv.unit %} <span class="muted">{{ sv.unit }}</span>{% endif %}</td>
+          <td>{{ sv.delivery_days }} يوم</td>
+          <td><span class="badge-soft">{{ sv.template_count }} قالب</span></td>
+          <td>{% if sv.is_active %}<span class="badge-soft" style="background:#E9F7EF;color:#1C6B43">منشورة</span>{% else %}<span class="badge-soft" style="background:#EEF1F5;color:#4B5A6D">مخفية</span>{% endif %}</td>
+          <td class="actions">
+            <a class="icon-btn" href="/services/{{ sv.slug }}" target="_blank" title="عرض في الموقع">{{ icon('eye') }}</a>
+            <a class="icon-btn" href="/admin/services/{{ sv.id }}" title="تعديل">{{ icon('edit') }}</a>
+            <form class="inline-form" method="post" action="/admin/services/{{ sv.id }}/delete" onsubmit="return confirm('حذف الخدمة «{{ sv.name }}» وجميع قوالبها؟ لا يمكن التراجع.');">
+              <button class="icon-btn danger" type="submit" title="حذف">{{ icon('trash') }}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not g.services %}
+        <tr><td colspan="6" class="muted" style="text-align:center;padding:22px">لا توجد خدمات في هذا القسم.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

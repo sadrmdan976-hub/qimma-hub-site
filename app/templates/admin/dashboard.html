@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import status_badge %}
+
+{% block title %}لوحة التحكم — {{ s.site_name }}{% endblock %}
+{% block page_title %}لوحة التحكم{% endblock %}
+{% block page_sub %}نظرة سريعة على الطلبات والخدمات في {{ s.site_name }}{% endblock %}
+{% block page_actions %}
+<a href="/admin/orders" class="btn btn-light">{{ icon('bag') }} كل الطلبات</a>
+<a href="/admin/services" class="btn btn-gold">{{ icon('layers') }} إدارة الخدمات</a>
+{% endblock %}
+
+{% block content %}
+{% if password_default %}
+<div class="alert alert--warn">
+  {{ icon('alert') }}
+  <span>ما زلت تستخدم كلمة المرور الافتراضية <b>admin123</b>. غيّرها الآن من <a href="/admin/settings" style="font-weight:700;text-decoration:underline">الإعدادات</a> لحماية لوحة الإدارة.</span>
+</div>
+{% endif %}
+
+<div class="stats-grid">
+  <a class="stat-card" href="/admin/orders?status=new">
+    <span class="icon-tile">{{ icon('bag') }}</span>
+    <div><b>{{ stats.new }}</b><span>طلبات جديدة</span></div>
+  </a>
+  <a class="stat-card" href="/admin/orders">
+    <span class="icon-tile">{{ icon('sparkle') }}</span>
+    <div><b>{{ stats.today }}</b><span>طلبات اليوم</span></div>
+  </a>
+  <a class="stat-card" href="/admin/orders?status=working">
+    <span class="icon-tile">{{ icon('clock') }}</span>
+    <div><b>{{ stats.working }}</b><span>قيد التنفيذ والمراجعة</span></div>
+  </a>
+  <a class="stat-card" href="/admin/orders?status=done">
+    <span class="icon-tile">{{ icon('check-circle') }}</span>
+    <div><b>{{ stats.done }}</b><span>طلبات مكتملة</span></div>
+  </a>
+</div>
+
+<div style="display:grid;grid-template-columns:1.6fr .9fr;gap:20px;align-items:start" class="dash-grid">
+  <div class="card">
+    <div class="card-head">
+      <div><h2>أحدث الطلبات</h2><p>آخر 8 طلبات وصلت إلى الموقع</p></div>
+      <a href="/admin/orders" class="btn btn-light btn-sm">عرض الكل</a>
+    </div>
+    {% if recent %}
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>الرقم</th><th>العميل</th><th>الخدمة</th><th>الحالة</th><th></th></tr></thead>
+        <tbody>
+          {% for o in recent %}
+          <tr>
+            <td><span class="ref">{{ o.ref }}</span><span class="sub">{{ o.created_at[:16]|replace('T', ' · ') }}</span></td>
+            <td>{{ o.customer_name }}<span class="sub" dir="ltr" style="text-align:end">{{ o.phone }}</span></td>
+            <td>{{ o.service_name or '—' }}{% if o.template_name %}<span class="sub">{{ o.template_name }}</span>{% endif %}</td>
+            <td>{{ status_badge(o.status) }}</td>
+            <td class="actions"><a class="btn btn-light btn-sm" href="/admin/orders/{{ o.id }}">تفاصيل</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="muted" style="padding:20px 0">لا توجد طلبات بعد. عندما يرسل زائر طلباً من الموقع سيظهر هنا فوراً.</p>
+    {% endif %}
+  </div>
+
+  <div style="display:grid;gap:20px">
+    <div class="card">
+      <div class="card-head"><h2>ملخص الحالات</h2></div>
+      <div class="kv">
+        {% for key, label in STATUSES.items() %}
+        <div><span class="k">{{ label }}</span><span class="v">{{ counts.get(key, 0) }}</span></div>
+        {% endfor %}
+        <div><span class="k">إجمالي الطلبات</span><span class="v">{{ stats.total }}</span></div>
+      </div>
+    </div>
+    <div class="mini-qr">
+      <img src="/qr.png" alt="QR">
+      <div>
+        <b>شارك الموقع</b>
+        <span>هذا الرمز يفتح رابط الموقع ({{ s.site_url }}). يمكنك طباعته على البورشورات والبطاقات.</span>
+        <a href="/admin/settings" class="btn btn-outline btn-sm" style="margin-top:8px">تعديل الرابط</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>@media (max-width: 1100px){ .dash-grid { grid-template-columns: 1fr !important; } }</style>
+{% endblock %}

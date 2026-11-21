@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import gallery_card %}
+
+{% block title %}معرض التصاميم — {{ s.site_name }}{% endblock %}
+{% block description %}نماذج من أعمالنا في تصميم الشهادات والدعوات والعروض والهويات البصرية والملصقات العلمية.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">الرئيسية</a><span class="sep">{{ icon('chevron-left') }}</span><span>معرض التصاميم</span></div>
+    <h1>معرض التصاميم</h1>
+    <p>نماذج توضيحية من أعمال المركز في الشهادات والدعوات والعروض والأغلفة والهويات. اضغط على أي نموذج لمشاهدته بحجم أكبر.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-bar">
+      <a class="filter-btn {{ 'is-active' if not active_cat }}" href="/gallery">الكل</a>
+      {% for c in cats %}
+      <a class="filter-btn {{ 'is-active' if active_cat == c }}" href="/gallery?category={{ c|urlencode }}">{{ c }}</a>
+      {% endfor %}
+    </div>
+    {% if items %}
+    <div class="gallery-grid">
+      {% for item in items %}
+      {{ gallery_card(item) }}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="center muted" style="padding:60px 0">لا توجد أعمال منشورة في هذا التصنيف حالياً.</div>
+    {% endif %}
+    <div class="center mt-5">
+      <a href="/order" class="btn btn-gold btn-lg">{{ icon('sparkle') }} اطلب تصميماً مثل هذه النماذج</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

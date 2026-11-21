@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon, brand %}
+{% from "_macros.html" import status_badge %}
+
+{% block title %}تم إرسال الطلب {{ order.ref }} — {{ s.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top:64px">
+  <div class="container">
+    <div class="success-wrap">
+      <div class="success-icon">{{ icon('check') }}</div>
+      <h1 style="font-size:clamp(26px,3vw,36px)">تم إرسال طلبك بنجاح</h1>
+      <p class="muted" style="margin-top:10px;font-size:15.5px">احفظ رقم الطلب التالي لمتابعة حالته، وسنتواصل معك عبر واتساب لتأكيد التفاصيل والسعر.</p>
+
+      <div class="ref-box">
+        <span>{{ order.ref }}</span>
+        <button class="btn btn-light btn-sm" type="button" data-copy="{{ order.ref }}">{{ icon('copy') }} نسخ</button>
+      </div>
+
+      <table class="summary-table">
+        <tr><th>الاسم</th><td>{{ order.customer_name }}</td></tr>
+        <tr><th>رقم التواصل</th><td dir="ltr" style="text-align:end">{{ order.phone }}</td></tr>
+        <tr><th>الخدمة</th><td>{{ order.service_name or '—' }}</td></tr>
+        <tr><th>القالب</th><td>{{ order.template_name or 'بدون قالب محدد' }}</td></tr>
+        <tr><th>الكمية</th><td>{{ order.quantity }}</td></tr>
+        {% if order.deadline %}<tr><th>الموعد المطلوب</th><td>{{ order.deadline }}</td></tr>{% endif %}
+        {% if order.notes %}<tr><th>تفاصيل الطلب</th><td style="font-weight:500;white-space:pre-line">{{ order.notes }}</td></tr>{% endif %}
+        {% if order.attachment %}<tr><th>الملف المرفق</th><td>{{ icon('file') }} تم استلام الملف بنجاح</td></tr>{% endif %}
+        <tr><th>تاريخ الإرسال</th><td>{{ order.created_at[:16]|replace('T', ' — ') }}</td></tr>
+        <tr><th>الحالة</th><td>{{ status_badge(order.status) }}</td></tr>
+      </table>
+
+      <div class="success-actions">
+        {% if wa_link %}
+        <a href="{{ wa_link }}" target="_blank" rel="noopener" class="btn btn-green btn-lg">{{ brand('whatsapp') }} إرسال الملخص عبر واتساب</a>
+        {% endif %}
+        <a href="/track?ref={{ order.ref }}" class="btn btn-light btn-lg">{{ icon('search') }} تتبع الطلب</a>
+        <a href="/order" class="btn btn-light btn-lg">{{ icon('plus') }} طلب آخر</a>
+      </div>
+
+      <div class="note-box mt-5" style="text-align:start">
+        {{ icon('info') }}
+        <span>إرسال الملخص عبر واتساب يسرّع المراجعة. إن لم يفتح الرابط تلقائياً، راسلنا على الرقم <b dir="ltr">{{ s.phone }}</b> مع رقم الطلب <b>{{ order.ref }}</b>.</span>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

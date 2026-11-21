@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# بيانات محلية وأسرار لا تُنشر
+data/
+deploy/cloud-state.json
+دليل-الاستخدام.txt
+*.log
+app/static/uploads/
+
+# نظام
+Thumbs.db
+.DS_Store
+desktop.ini
