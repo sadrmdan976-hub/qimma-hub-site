@@ -13,6 +13,9 @@ deploy/mobile_audit.py
 deploy/mobile_shots.py
 deploy/admin_mobile_audit.py
 deploy/admin_overflow_probe.py
+deploy/docs_screens.py
+deploy/make_pdfs.py
+docs/preview/
 shots/
 deploy/تقرير-النشر.txt
 دليل-الاستخدام.txt
