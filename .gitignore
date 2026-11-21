@@ -7,6 +7,8 @@ env/
 # بيانات محلية وأسرار لا تُنشر
 data/
 deploy/cloud-state.json
+deploy/check_live.py
+deploy/تقرير-النشر.txt
 دليل-الاستخدام.txt
 *.log
 app/static/uploads/

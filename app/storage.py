@@ -69,7 +69,7 @@ def signed_url(ref, expires=3600):
     signed = data.get("signedURL") or ""
     if not signed:
         return None
-    return SUPABASE_URL + signed
+    return f"{SUPABASE_URL}/storage/v1{signed}"
 
 
 def delete(ref):
