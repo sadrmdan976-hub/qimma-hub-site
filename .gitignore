@@ -11,6 +11,8 @@ deploy/check_live.py
 deploy/setup_auto_deploy.py
 deploy/mobile_audit.py
 deploy/mobile_shots.py
+deploy/admin_mobile_audit.py
+deploy/admin_overflow_probe.py
 shots/
 deploy/تقرير-النشر.txt
 دليل-الاستخدام.txt

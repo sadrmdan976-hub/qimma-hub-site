@@ -13,22 +13,28 @@
 </head>
 <body class="admin-body">
 <aside class="admin-side">
+  <input type="checkbox" id="admin-nav-toggle" class="nav-toggle" aria-label="فتح قائمة التنقل">
   <div class="admin-side-brand">
     <img src="/static/img/logo.png" alt="{{ s.site_name }}">
     <div class="txt"><b>لوحة الإدارة</b><span>{{ s.site_name_ar }}</span></div>
   </div>
-  <nav class="admin-nav">
-    <a href="/admin" class="{{ 'is-active' if path == '/admin' }}">{{ icon('grid') }} لوحة التحكم</a>
-    <a href="/admin/orders" class="{{ 'is-active' if path.startswith('/admin/orders') }}">{{ icon('bag') }} الطلبات {% if new_orders %}<span class="nav-count">{{ new_orders }}</span>{% endif %}</a>
-    <a href="/admin/services" class="{{ 'is-active' if path.startswith('/admin/services') }}">{{ icon('layers') }} الخدمات والقوالب</a>
-    <a href="/admin/gallery" class="{{ 'is-active' if path.startswith('/admin/gallery') }}">{{ icon('image') }} معرض الأعمال</a>
-    <a href="/admin/packages" class="{{ 'is-active' if path.startswith('/admin/packages') }}">{{ icon('box') }} الباقات</a>
-    <a href="/admin/faqs" class="{{ 'is-active' if path.startswith('/admin/faqs') }}">{{ icon('help') }} الأسئلة الشائعة</a>
-    <a href="/admin/settings" class="{{ 'is-active' if path.startswith('/admin/settings') }}">{{ icon('settings') }} الإعدادات</a>
-  </nav>
-  <div class="admin-side-foot">
-    <a href="/" target="_blank">{{ icon('external') }} <span>عرض الموقع</span></a>
-    <a href="/admin/logout">{{ icon('logout') }} <span>تسجيل الخروج</span></a>
+  <label for="admin-nav-toggle" class="admin-menu-btn" aria-label="فتح القائمة">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </label>
+  <div class="admin-side-panel">
+    <nav class="admin-nav">
+      <a href="/admin" class="{{ 'is-active' if path == '/admin' }}">{{ icon('grid') }} لوحة التحكم</a>
+      <a href="/admin/orders" class="{{ 'is-active' if path.startswith('/admin/orders') }}">{{ icon('bag') }} الطلبات {% if new_orders %}<span class="nav-count">{{ new_orders }}</span>{% endif %}</a>
+      <a href="/admin/services" class="{{ 'is-active' if path.startswith('/admin/services') }}">{{ icon('layers') }} الخدمات والقوالب</a>
+      <a href="/admin/gallery" class="{{ 'is-active' if path.startswith('/admin/gallery') }}">{{ icon('image') }} معرض الأعمال</a>
+      <a href="/admin/packages" class="{{ 'is-active' if path.startswith('/admin/packages') }}">{{ icon('box') }} الباقات</a>
+      <a href="/admin/faqs" class="{{ 'is-active' if path.startswith('/admin/faqs') }}">{{ icon('help') }} الأسئلة الشائعة</a>
+      <a href="/admin/settings" class="{{ 'is-active' if path.startswith('/admin/settings') }}">{{ icon('settings') }} الإعدادات</a>
+    </nav>
+    <div class="admin-side-foot">
+      <a href="/" target="_blank">{{ icon('external') }} <span>عرض الموقع</span></a>
+      <a href="/admin/logout">{{ icon('logout') }} <span>تسجيل الخروج</span></a>
+    </div>
   </div>
 </aside>
 

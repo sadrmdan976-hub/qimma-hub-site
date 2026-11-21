@@ -15,6 +15,9 @@
   border-inline-start: 1px solid rgba(201, 155, 78, .25);
   overflow-y: auto;
 }
+.admin-side-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.nav-toggle { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; opacity: 0; pointer-events: none; }
+.admin-menu-btn { display: none; }
 .admin-side-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 18px; border-bottom: 1px solid rgba(255, 255, 255, .07); margin-bottom: 16px; }
 .admin-side-brand img { height: 48px; width: auto; border-radius: 8px; }
 .admin-side-brand span { font-size: 11px; color: #8FA1B6; display: block; margin-top: 2px; }
@@ -45,7 +48,8 @@
 .admin-top .admin-sub { font-size: 13px; color: var(--muted); display: block; margin-top: 4px; }
 .admin-actions { display: flex; gap: 9px; flex-wrap: wrap; }
 
-.card { background: #FFFDF8; border: 1px solid #E7DDCB; border-radius: 16px; padding: 22px; box-shadow: 0 2px 8px rgba(10, 30, 55, .03); }
+.card { background: #FFFDF8; border: 1px solid #E7DDCB; border-radius: 16px; padding: 22px; box-shadow: 0 2px 8px rgba(10, 30, 55, .03); min-width: 0; }
+.dash-grid, .dash-grid > * { min-width: 0; }
 .card + .card { margin-top: 20px; }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
 .card-head h2 { font-size: 17px; }
@@ -180,22 +184,41 @@ table.data td.actions { white-space: nowrap; text-align: end; }
 @media (max-width: 900px) {
   .admin-body { display: block; }
   .admin-side {
-    position: static; width: auto; flex-direction: row; align-items: center; padding: 10px 14px;
-    overflow-x: auto; gap: 12px;
+    position: sticky; top: 0; inset-block: auto; inset-inline: 0; z-index: 60;
+    width: 100%; flex-direction: row; align-items: center; gap: 10px;
+    padding: 8px 14px; overflow: visible;
+    border-inline-start: 0; border-bottom: 1px solid rgba(201, 155, 78, .25);
   }
   .admin-side-brand { border: 0; padding: 0; margin: 0; flex: none; }
-  .admin-side-brand img { height: 38px; }
+  .admin-side-brand img { height: 36px; }
   .admin-side-brand .txt { display: none; }
-  .admin-nav { display: flex; gap: 4px; }
-  .admin-nav a { white-space: nowrap; padding: 8px 12px; font-size: 13px; }
-  .admin-nav a svg { display: none; }
-  .admin-nav .nav-count { display: none; }
-  .admin-side-foot { margin: 0 0 0 auto; flex: none; border: 0; padding: 0; display: flex; }
-  .admin-side-foot a span { display: none; }
+  .admin-menu-btn {
+    display: inline-flex; align-items: center; justify-content: center; margin-inline-start: auto;
+    width: 42px; height: 42px; border-radius: 11px; flex: none; cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, .16); color: #fff;
+  }
+  .admin-menu-btn svg { width: 21px; height: 21px; }
+  .nav-toggle:focus-visible ~ .admin-menu-btn { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .admin-side-panel {
+    display: none; position: absolute; top: 100%; inset-inline: 0;
+    background: #04122A; border-bottom: 1px solid rgba(201, 155, 78, .3);
+    padding: 10px 12px 14px; max-height: calc(100dvh - 64px); overflow-y: auto;
+    box-shadow: 0 24px 40px -18px rgba(2, 12, 28, .65);
+  }
+  .nav-toggle:checked ~ .admin-side-panel { display: flex; }
+  .admin-nav { display: grid; gap: 2px; }
+  .admin-nav a { white-space: normal; padding: 11px 12px; font-size: 14px; }
+  .admin-nav .nav-count { display: inline-block; }
+  .admin-side-foot {
+    margin: 8px 0 0; border: 0; border-top: 1px solid rgba(255, 255, 255, .07);
+    padding-top: 8px; display: grid;
+  }
+  .admin-side-foot a { padding: 10px 12px; }
+  .admin-side-foot a span { display: inline; }
   .admin-main { margin: 0; padding: 20px 16px 50px; }
   .admin-top h1 { font-size: 21px; }
   .toolbar form { margin-inline-start: 0; width: 100%; }
-  .toolbar .input { width: 100%; }
+  .toolbar .input { width: 100%; font-size: 16px; }
   .toolbar form .btn { flex: none; }
 }
 @media (max-width: 600px) {
