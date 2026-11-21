@@ -8,6 +8,7 @@ env/
 data/
 deploy/cloud-state.json
 deploy/check_live.py
+deploy/setup_auto_deploy.py
 deploy/تقرير-النشر.txt
 دليل-الاستخدام.txt
 *.log
