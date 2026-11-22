@@ -16,7 +16,7 @@
         <a href="/services" class="btn btn-outline btn-lg">تصفح الخدمات {{ icon('chevron-left') }}</a>
       </div>
       <div class="hero-chips">
-        <span class="hero-chip">{{ icon('layers') }} 36+ خدمة جامعية</span>
+        <span class="hero-chip">{{ icon('layers') }} 30+ خدمة جامعية</span>
         <span class="hero-chip">{{ icon('image') }} قوالب متعددة لكل طلب</span>
         <span class="hero-chip">{{ icon('truck') }} تسليم إلكتروني أو طباعة</span>
       </div>
@@ -65,7 +65,7 @@
 
 <section class="section section--paper">
   <div class="container">
-    {{ section_head('الأكثر طلباً', 'خدمات يحبها الطلاب والأنشطة', 'اختر الخدمة، شاهد القوالب المتاحة، وأرسل طلبك في دقيقة واحدة.', action_href='/services', action_label='عرض الكل') }}
+    {{ section_head('الأكثر طلباً', 'الخدمات الرائجة', 'اختر الخدمة، شاهد القوالب المتاحة، وأرسل طلبك في دقيقة واحدة.', action_href='/services', action_label='عرض الكل') }}
     <div class="service-grid">
       {% for sv in featured %}
       {{ service_card(sv, currency, loop.index0 * 50) }}

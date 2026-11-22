@@ -33,6 +33,9 @@ CATEGORIES = [
                  summary="سيرة ذاتية احترافية بصيغة عربية أو إنجليزية جاهزة للطباعة والإرسال."),
             dict(name="تحويل وتنسيق الملفات إلكترونياً", price=5, days=1, kind="doc",
                  summary="تحويل بين Word وPDF والصور، وضغط الملفات وتجهيزها للإرسال."),
+            dict(name="التدريب والإتقان", price=30, days=5, kind="doc", unit="/ دورة", featured=1,
+                 summary="دورات تعليمية عملية في Word وExcel وPowerPoint — من الأساسيات إلى المستوى الاحترافي، مع تطبيقات وملفات تدريب.",
+                 description="خدمة التدريب والإتقان تقدم دورات تعليمية قصيرة وعملية على برامج Microsoft Office: دورة Word لتنسيق البحوث والتقارير والأغلفة، دورة Excel للجداول والحسابات والرسوم البيانية، ودورة PowerPoint لتصميم العروض التقديمية خطوة بخطوة. تشمل كل دورة تطبيقات عملية وملفات تدريب ومساعدة بعد انتهاء الدورة."),
         ],
     },
     {
@@ -214,7 +217,7 @@ def seed():
             service_id = db.insert_ignore(
                 "INSERT OR IGNORE INTO services(category_id, name, slug, summary, description, price, price_note, unit, delivery_days, is_active, featured, sort) "
                 "VALUES(?,?,?,?,?,?,?,?,?,1,?,?)",
-                (cat_id, sv["name"], f"service-{s_index}", sv["summary"], sv["summary"], sv["price"],
+                (cat_id, sv["name"], f"service-{s_index}", sv["summary"], sv.get("description", sv["summary"]), sv["price"],
                  "يبدأ من", sv.get("unit", ""), sv["days"], sv.get("featured", 0), sv_index),
             )
             if not service_id:
